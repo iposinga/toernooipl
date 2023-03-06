@@ -1,0 +1,13 @@
+.bi {
+    /*font-size: larger;*/
+}
+
+.accordion-button {
+    height: 45px;
+    background-color: #e2007c !important;
+    color: white !important;
+}
+
+.link-underlineless {
+    text-decoration: none;
+}

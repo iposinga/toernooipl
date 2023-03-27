@@ -13,6 +13,7 @@ class Game extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tournement_id',
         'round_id',
         'pitch_id',
         'hometeam_id',
@@ -30,6 +31,10 @@ class Game extends Model
         'poule_round'
     ];
 
+    public function tournement(): BelongsTo
+    {
+        return $this->belongsTo(Tournement::class);
+    }
     public function round(): BelongsTo
     {
         return $this->belongsTo(Round::class);
@@ -57,8 +62,8 @@ class Game extends Model
     }
 
     //koppel het bijbehorende toernooi via de speelronde
-    public function tournement(): HasOneThrough
+    /*public function tournement(): HasOneThrough
     {
         return $this->hasOneThrough(Tournement::class, Round::class);
-    }
+    }*/
 }

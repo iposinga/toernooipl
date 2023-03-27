@@ -15,7 +15,7 @@
             <td class="text-end border-end">{{ $sortedteam->verloren }}</td>
             <td class="text-end">+{{ $sortedteam->doelpvoor }}</td>
             <td class="text-end">-{{ $sortedteam->doelptegen }}</td>
-            <td class="text-end text-bg-warning">{{ $sortedteam->doelsdaldo }}</td>
+            <td class="text-end text-bg-info">{{ $sortedteam->doelsdaldo }}</td>
         </tr>
     <?php $plek++; ?>
     @endforeach

@@ -18,6 +18,7 @@ class GameSeeder extends Seeder
     {
         DB::table('games')->insert(array(
             array(
+                'tournement_id' => 1,
                 'round_id' => 1,
                 'pitch_id' => 1,
                 'hometeam_id' => 6,
@@ -41,6 +42,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 2,
                 'pitch_id' => 1,
                 'hometeam_id' => 2,
@@ -64,6 +66,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 3,
                 'pitch_id' => 1,
                 'hometeam_id' => 3,
@@ -87,6 +90,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 4,
                 'pitch_id' => 1,
                 'hometeam_id' => 1,
@@ -110,6 +114,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 5,
                 'pitch_id' => 1,
                 'hometeam_id' => 3,
@@ -133,6 +138,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 6,
                 'pitch_id' => 1,
                 'hometeam_id' => 4,
@@ -156,6 +162,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 7,
                 'pitch_id' => 1,
                 'hometeam_id' => 1,
@@ -179,6 +186,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 8,
                 'pitch_id' => 1,
                 'hometeam_id' => 4,
@@ -202,6 +210,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 9,
                 'pitch_id' => 1,
                 'hometeam_id' => 6,
@@ -225,6 +234,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 10,
                 'pitch_id' => 1,
                 'hometeam_id' => 4,
@@ -248,6 +258,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 11,
                 'pitch_id' => 1,
                 'hometeam_id' => 2,
@@ -271,6 +282,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 12,
                 'pitch_id' => 1,
                 'hometeam_id' => 5,
@@ -294,6 +306,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 13,
                 'pitch_id' => 1,
                 'hometeam_id' => 1,
@@ -317,6 +330,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 14,
                 'pitch_id' => 1,
                 'hometeam_id' => 6,
@@ -340,6 +354,7 @@ class GameSeeder extends Seeder
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ),
             array(
+                'tournement_id' => 1,
                 'round_id' => 15,
                 'pitch_id' => 1,
                 'hometeam_id' => 5,

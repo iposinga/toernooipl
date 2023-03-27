@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->id();
-            //$table->integer('round_id');
-            $table->foreignID('round_id')->constrained('rounds')->onDelete('cascade');
-            //$table->foreign('round_id')->references('id')->on('rounds')->onDelete('cascade');
-            $table->integer('pitch_id');
+            $table->foreignId('tournement_id')->constrained('tournements')->onDelete('cascade');
+            $table->integer('round_id')->nullable();
+            $table->integer('pitch_id')->nullable();
             $table->integer('hometeam_id');
             $table->integer('awayteam_id');
             $table->mediumInteger('home_score')->nullable();

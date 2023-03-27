@@ -26,7 +26,9 @@ class TournementController extends Controller
                 [7, 5, 4], [4, 6, 4], [0, 3, 4], [1, 2, 4], [4, 7, 5], [3, 5, 5], [2, 0, 5], [6, 1, 5], [3, 7, 6], [5, 2, 6], [0, 6, 6], [1, 4, 6],
                 [2, 3, 7], [6, 5, 7], [7, 1, 7], [4, 0, 7]];
 
-    public function index(int $id): View
+    const POULENAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'];
+
+    /*public function show(int $id): View
     {
         $pitches = Pitch::where('tournement_id', $id)->get();
         $poules = Poule::with('teams')->where('tournement_id', $id)->get();
@@ -36,6 +38,18 @@ class TournementController extends Controller
             })
             ->get();
         return view('tournement.index', compact(['pitches', 'poules','wedstrijden']));
+    }*/
+    public function show(int $id): View
+    {
+        $tournement = Tournement::with('users')->find($id);
+        $pitches = Pitch::where('tournement_id', $id)->get();
+        $poules = Poule::with('teams')->where('tournement_id', $id)->get();
+        $games = Game::with('round', 'pitch', 'hometeam', 'awayteam')
+            ->where('tournement_id', $id)
+            ->orderBy('round_id', 'asc')
+            ->orderBy('pitch_id', 'asc')
+            ->get();
+        return view('tournement.index', compact(['tournement', 'pitches', 'poules','games']));
     }
 
     public function store(Request $request): RedirectResponse
@@ -49,11 +63,11 @@ class TournementController extends Controller
         $tournement->pitches_nmbr = $request->input('inputVelden');
         $tournement->match_duration = $request->input('inputDuur');
         $tournement->change_duration = $request->input('inputPauze');
+        $tournement->is_entire_comp = $request->input('inputCompetitieType');
         $tournement->save();
         $tournement->users()->attach([$tournement->id => ['user_id' => Auth::user()->id, 'is_admin' => 1]]);
         $this->setupTournement($tournement);
         return redirect()->route('home');
-        //return redirect()->back();
     }
 
     public function addusers(int $tournementid)
@@ -87,6 +101,31 @@ class TournementController extends Controller
         if ($tournement->pitches_nmbr == 1 && $tournement->poules_nmbr == 1)
         {
             $this->setupSimpleTournement($tournement);
+        }
+        else
+        {
+            $poulesnmbrteamsnmbrgames = array();
+            $nmbrteamsperpoule = floor($tournement->teams_nmbr / $tournement->poules_nmbr);
+            $nmbrpoules1teammore = fmod($tournement->teams_nmbr, $tournement->poules_nmbr);
+            $i = 0;
+            while($i < $nmbrpoules1teammore)
+            {
+                $nmbrteamsinpoule = $nmbrteamsperpoule + 1;
+                $nmbrgamesinpoule = ($nmbrteamsinpoule * ($nmbrteamsinpoule - 1)) / 2;
+                if($tournement->is_entire_comp == 1)
+                    $nmbrgamesinpoule += $nmbrgamesinpoule;
+                $poulesnmbrteamsnmbrgames[$i] = [self::POULENAMES[$i], $nmbrteamsinpoule, $nmbrgamesinpoule];
+                $i++;
+            }
+            while($i < $tournement->poules_nmbr)
+            {
+                $nmbrgamesinpoule = ($nmbrteamsperpoule * ($nmbrteamsperpoule - 1)) / 2;
+                if($tournement->is_entire_comp == 1)
+                    $nmbrgamesinpoule += $nmbrgamesinpoule;
+                $poulesnmbrteamsnmbrgames[$i] = [self::POULENAMES[$i], $nmbrteamsperpoule, $nmbrgamesinpoule];
+                $i++;
+            }
+            $this->setupComplexTournement($tournement , $poulesnmbrteamsnmbrgames);
         }
     }
 
@@ -152,14 +191,136 @@ class TournementController extends Controller
         };
     }
 
-/*    public function delete(int $id)
-    {
-        $tournement = Tournement::find($id);
-        $tournement->delete();
-        return redirect()->route('home')
-            ->withSuccess(__('Het toernooi is met succes verwijderd.'));
-    }*/
 
+    private function setupComplexTournement($tournement, $paramarray)
+    {
+        //attach the pitches to the tournement
+        $counter = 1;
+        while($counter <= $tournement->pitches_nmbr)
+        {
+            Pitch::create([
+                'tournement_id' => $tournement->id,
+                'pitch_name' => $counter
+            ]);
+            $counter++;
+        }
+        //attach de poules to the tournement and attach teams to the poules
+        $nmbrgamestotal = 0;
+        $teamnr = 1;
+        foreach ($paramarray as $pouledata)
+        {
+            $poule = Poule::create([
+                'tournement_id' => $tournement->id,
+                'poule_name' => $pouledata[0]
+            ]);
+            $i = 0;
+            while ($i < $pouledata[1]) {
+                Team::create([
+                    'poule_id' => $poule->id,
+                    'team_nr' => $teamnr,
+                    'team_name' => 'Team '.$teamnr
+                ]);
+                $i++;
+                $teamnr++;
+            }
+            $nmbrgamestotal += $pouledata[2];
+        }
+        //calculate de needed number of rounds
+        $nmbrounds = $nmbrgamestotal / $tournement->pitches_nmbr;
+        if(fmod($nmbrgamestotal, $tournement->pitches_nmbr) <> 0)
+        {
+            $nmbrounds = floor($nmbrgamestotal / $tournement->pitches_nmbr) + 1;
+        }
+        //attach the rounds to the tournement
+        $j = 1;
+        $start = $tournement->tournement_date;
+        $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $tournement->match_duration . ' minutes'));
+        while ($j <= $nmbrounds) {
+            Round::create([
+                'tournement_id' => $tournement->id,
+                'round_nr' => $j,
+                'start' => $start,
+                'end' => $end
+            ]);
+            $start = date('Y-m-d H:i:s', strtotime($end . ' +' . $tournement->change_duration . ' minutes'));
+            $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $tournement->match_duration . ' minutes'));
+            $j++;
+        }
+        //attach the games to the tournement
+        $this->makeGames($tournement->id, $tournement->is_entire_comp);
+        //attach the rounds and pitches to the games
+        $this->attachRoundsAndPitches($tournement->id);
+        //return view('tournement.index2', compact(['tournement', 'paramarray']));
+    }
+
+    private function makeGames($id, $entirecomp)
+    {
+        $poules = Poule::where('tournement_id', $id)->orderBy('poule_name', 'asc')->get();
+        foreach ($poules as $poule)
+        {
+            $teams = Team::where('poule_id', $poule->id)->orderBy('team_nr', 'asc')->get();
+            $teamsCount = $teams->count();
+            if($teamsCount == 5)
+                $wedstrschema = self::WEDSTRIJDSCHEMA5;
+            elseif ($teamsCount == 6)
+                $wedstrschema = self::WEDSTRIJDSCHEMA6;
+            elseif ($teamsCount == 7)
+                $wedstrschema = self::WEDSTRIJDSCHEMA7;
+            elseif ($teamsCount == 8)
+                $wedstrschema = self::WEDSTRIJDSCHEMA8;
+            $k = 0;
+            while($k < count($wedstrschema))
+            {
+                Game::create([
+                    'tournement_id' => $id,
+                    'hometeam_id' => $teams[$wedstrschema[$k][0]]->id,
+                    'awayteam_id' => $teams[$wedstrschema[$k][1]]->id,
+                    'poule_round' => $wedstrschema[$k][2]
+                ]);
+                $k++;
+            };
+            if($entirecomp == 1)
+            {
+                $k--;
+                $actuelepouleronde = $wedstrschema[$k][2];
+                $k = 0;
+                while($k < count($wedstrschema))
+                {
+                    Game::create([
+                        'tournement_id' => $id,
+                        'hometeam_id' => $teams[$wedstrschema[$k][1]]->id,
+                        'awayteam_id' => $teams[$wedstrschema[$k][0]]->id,
+                        'poule_round' => $actuelepouleronde + $wedstrschema[$k][2]
+                    ]);
+                    $k++;
+                };
+            }
+        }
+    }
+
+    private function attachRoundsAndPitches($id)
+    {
+        $games = GAME::where('tournement_id', $id)->get()
+            ->sortBy(function($query){return $query->hometeam->poule->poule_name;})
+            ->sortBy('poule_round')
+            ->all();
+        $rounds = ROUND::where('tournement_id', $id)->orderBy('round_nr')->get();
+        $pitches = PITCH::where('tournement_id', $id)->orderBy('pitch_name')->get();
+        $k=0;
+        $m=0;
+        foreach($games as $game)
+        {
+            if($k == $pitches->count()) {
+                $k = 0;
+                $m++;
+            }
+            $game->update([
+                'round_id' => $rounds[$m]->id,
+                'pitch_id' => $pitches[$k]->id
+            ]);
+            $k++;
+        }
+    }
     public function destroy(Tournement $tournement)
     {
         $tournement->delete();

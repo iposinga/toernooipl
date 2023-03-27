@@ -47,10 +47,14 @@ class Tournement extends Model
         return $this->hasMany(Pitch::class);
     }
 
-    public function games(): HasManyThrough
+    public function games(): HasMany
+    {
+        return $this->hasMany(Game::class);
+    }
+    /*public function games(): HasManyThrough
     {
         return $this->hasManyThrough(Game::class, Round::class);
-    }
+    }*/
 
     public function teams(): HasManyThrough
     {

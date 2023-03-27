@@ -3,7 +3,7 @@
 print_r($poule);
 echo "</pre>";*/
 ?>
-<form id="edit_poule_form" class="row g-3" method="post" action="{{ route('updatepouledata', ['id' => $poule[0]->id]) }}">
+<form id="edit_poule_form" method="post" class="row g-3" action="{{ route('poules.update', $poule[0]->id) }}">
     {{ csrf_field() }}
     <div class="col-md-2">
     </div>

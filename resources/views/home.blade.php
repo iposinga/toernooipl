@@ -27,7 +27,7 @@
                     <table class="table table-sm table-hover w-auto">
                 @foreach($toernooien as $toernooi)
                             <tr style="font-size: larger">
-                                <td><a style="text-decoration: none; color: #e2007c" href="{{ route('tournement.index', ['id' => $toernooi->id]) }}">{{ $toernooi->tournement_name }}</a></td>
+                                <td><a style="text-decoration: none; color: #e2007c" href="{{ route('tournement.show', $toernooi->id) }}">{{ $toernooi->tournement_name }}</a></td>
                                 <td>{{ Carbon\Carbon::parse($toernooi->tournement_date)->translatedFormat('j F Y')  }}</td>
                             </tr>
                 @endforeach
@@ -99,7 +99,7 @@
             </div>
             <div class="col-md-12">
                 <div class="form-check form-switch form-check-lg">
-                    <input class="form-check-input" type="checkbox" role="switch" id="inputCompetitieType" name="inputCompetitieType">
+                    <input class="form-check-input" type="checkbox" role="switch" id="inputCompetitieType" name="inputCompetitieType" value="1">
                     <label class="form-check-label" for="inputCompetitieType">De teams spelen een hele (i.p.v. halve) competitie in de poule</label>
                 </div>
             </div>

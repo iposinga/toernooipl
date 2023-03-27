@@ -16,23 +16,22 @@ class PouleController extends Controller
     public function edit(int $id)
     {
         $poule = Poule::with('teams')->where('id', $id)->get();
-        $html = view('poule.poule_edit_form')->with(compact('poule'))->render();
+        $html = view('poule.edit')->with(compact('poule'))->render();
         return response()->json(['success' => true, 'html' => $html]);
-        //return view('poule.poule_edit_form', compact('poule'));
     }
 
     public function update(Request $request, $id)
     {
-        //$poule = Poule::with('teams')->find($id);
-        $poule = Poule::with('teams')->where('id', $id)->get();
-        foreach ($poule[0]->teams as $team) {
-            $team->team_name = $request->input('inputTeamname_'.$team->id);
-            $team->save();
+        $teams = Team::where('poule_id', $id)->get();
+        foreach ($teams as $team) {
+            $team->update([
+                'team_name'=>$request->input('inputTeamname_'.$team->id)
+            ]);
         }
         return redirect()->back();
     }
 
-    public function show(int $pouleid)
+    public function show_stand(int $pouleid)
     {
         $teams = Team::with('homegames', 'awaygames')
             ->where('poule_id', $pouleid)
@@ -65,11 +64,11 @@ class PouleController extends Controller
             ['gespeeld', 'asc'],
             ['doelsaldo', 'desc']
         ]);
-        $html = view('poule.poulestand')->with(compact('sortedteams'))->render();
+        $html = view('poule.stand')->with(compact('sortedteams'))->render();
         return response()->json(['success' => true, 'html' => $html]);
     }
 
-    public function index(int $pouleid)
+    public function show(int $pouleid)
     {
         $wedstrijden = Game::with('hometeam.poule', 'round.tournement', 'hometeam', 'awayteam', 'pitch')
             ->whereHas('hometeam', function($q) use ($pouleid) {

@@ -17,7 +17,7 @@
                         <div class="row">
                         <div class="col">Users</div>
                         <div class="col text-end">
-                            <a type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showAddTournementusers({{ $tournement->id }}); return false">
+                            <a type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showAddTournementusers({{ $wedstrijden[0]->round->tournement->id }}); return false">
                                 <i class="bi bi-plus-square"></i>
                             </a>
                         </div>
@@ -25,7 +25,7 @@
                     </div>
                     <div class="card-body">
                         <ul>
-                            @foreach($tournement->users as $user)
+                            @foreach($wedstrijden[0]->round->tournement->users as $user)
                                 <li>{{ $user->name }} </li>
                             @endforeach
                         </ul>
@@ -36,31 +36,22 @@
                     <div class="card-body">
                         <table class="table table-sm table-hover">
                             <tr><td><i class="bi bi-hash"></i> teams</td>
-                                <td class="text-end">{{ $tournement->teams_nmbr }}</td>
+                                <td class="text-end">{{ $wedstrijden[0]->round->tournement->teams_nmbr }}</td>
                             </tr>
                             <tr><td><i class="bi bi-hash"></i> poules</td>
-                                <td class="text-end">{{ $tournement->poules_nmbr }}</td>
+                                <td class="text-end">{{ $wedstrijden[0]->round->tournement->poules_nmbr }}</td>
                             </tr>
                             <tr><td><i class="bi bi-hash"></i> velden</td>
-                                <td class="text-end">{{ $tournement->pitches_nmbr }}</td>
+                                <td class="text-end">{{ $wedstrijden[0]->round->tournement->pitches_nmbr }}</td>
                             </tr>
                             <tr><td><i class="bi bi-clock"></i> aanvang</td>
-                                <td class="text-end">{{ Carbon\Carbon::parse($tournement->tournement_date)->translatedFormat('G:i')  }} u</td>
+                                <td class="text-end">{{ Carbon\Carbon::parse($wedstrijden[0]->round->tournement->tournement_date)->translatedFormat('G:i')  }} u</td>
                             </tr>
                             <tr><td><i class="bi bi-hourglass"></i> wedstrijd</td>
-                                <td class="text-end">{{ $tournement->match_duration }} m</td>
+                                <td class="text-end">{{ $wedstrijden[0]->round->tournement->match_duration }} m</td>
                             </tr>
                             <tr><td><i class="bi bi-hourglass-split"></i> wisseltijd</td>
-                                <td class="text-end">{{ $tournement->change_duration }} m</td>
-                            </tr>
-                            <tr><td colspan="2">
-                                    @if($tournement->is_entire_comp == 1)
-                                        <i class="bi bi-signpost-2"></i> hele
-                                    @else
-                                        <i class="bi bi-signpost"></i> halve
-                                    @endif
-                                    competitie
-                                </td>
+                                <td class="text-end">{{ $wedstrijden[0]->round->tournement->change_duration }} m</td>
                             </tr>
                         </table>
                     </div>
@@ -86,18 +77,18 @@
                     <div class="card-header" style="background-color: #29286d; color: white;">
                         <div class="row" style="font-size: larger">
                             <div class="col-4">
-                                {{ $tournement->tournement_name }}
+                                {{ $wedstrijden[0]->round->tournement->tournement_name }}
                             </div>
                             <div class="col-2 text-end">
                                 <i class="bi bi-fullscreen"></i>
                             </div>
                             <div class="col-2">
-                                <a type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showDestroyAlert({{ $tournement->id }}); return false">
+                                <a type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showDestroyAlert({{ $wedstrijden[0]->round->tournement->id }}); return false">
                                     <i class="bi bi-trash3"></i>
                                 </a>
                             </div>
                             <div class="col-4 text-end">
-                                {{ Carbon\Carbon::parse($tournement->tournement_date)->translatedFormat('l j F Y')  }}
+                                {{ Carbon\Carbon::parse($wedstrijden[0]->round->tournement->tournement_date)->translatedFormat('l j F Y')  }}
                             </div>
                         </div>
                     </div>
@@ -108,49 +99,41 @@
                             </div>
                         @endif
                         <table class="table table-hover w-auto">
-
-                            <thead><th colspan="2">ronde en tijd</th>
-                            @foreach($pitches as $pitch)
-                                <th>veld {{ $pitch->pitch_name }}</th>
-                            @endforeach
-                            </thead>
-
-                            <?php $vorigeveld = 0  ?>
-                            @foreach($games as $wedstrijd)
-                                @if($wedstrijd->round->round_nr <> $vorigeveld)
-                                    <?php $vorigeveld = $wedstrijd->round->round_nr ?>
-                                <tr>
-                                    <td class="text-end border-end align-middle"><b>{{ $wedstrijd->round->round_nr }}.</b></td>
-                                    <td class="border-end align-middle">{{ Carbon\Carbon::parse($wedstrijd->round->start)->translatedFormat('H:i') }}
-                                    - {{ Carbon\Carbon::parse($wedstrijd->round->end)->translatedFormat('H:i') }}
+                            <thead><th colspan="2">ronde</th><th colspan="3">tijd</th><th>veld</th><th colspan="3">wedstrijd</th><th colspan="4">uitslag</th></thead>
+                           @foreach($wedstrijden as $wedstrijd)
+                                <tr class="wedstr_{{ $wedstrijd->hometeam->team_nr }} wedstr_{{ $wedstrijd->awayteam->team_nr }}">
+                                    <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                                            <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                                        </svg></td>
+                                    <td class="text-end">{{ $wedstrijd->round->round_nr }}.</td>
+                                    <td>{{ Carbon\Carbon::parse($wedstrijd->round->start)->translatedFormat('H:i') }} uur</td>
+                                    <td>-</td>
+                                    <td>{{ Carbon\Carbon::parse($wedstrijd->round->end)->translatedFormat('H:i') }} uur</td>
+                                    <td class="text-center">{{ $wedstrijd->pitch->pitch_name }}</td>
+                                    <td>@if($wedstrijd->hometeam->team_name != null)
+                                            {{ $wedstrijd->hometeam->team_name }}
+                                        @else
+                                            {{ $wedstrijd->hometeam->team_nr }}
+                                        @endif
                                     </td>
-                                @endif
-                                    <?php
-                                        if(count($pitches) > 4 || is_null($wedstrijd->hometeam->team_name))
-                                        {
-                                            $hometeamname = $wedstrijd->hometeam->team_nr;
-                                            $awayteamname = $wedstrijd->awayteam->team_nr;
-                                        }
-                                        else
-                                        {
-                                            $hometeamname = $wedstrijd->hometeam->team_name;
-                                            $awayteamname = $wedstrijd->awayteam->team_name;
-                                        }
-
-                                        ?>
-                                    <td class="wedstr_{{ $wedstrijd->hometeam->team_nr }} wedstr_{{ $wedstrijd->awayteam->team_nr }} text-center border-end align-middle" style="padding-bottom: 0px">
-                                    <a id="edit_game_btn_{{ $wedstrijd->id }}" type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showEditUitslag({{ $wedstrijd->id }}, '{{ $hometeamname }}', '{{ $awayteamname }}', '{{ $wedstrijd->home_score }}', '{{ $wedstrijd->away_score }}'); return false">
-                                        {{ $hometeamname }} - {{ $awayteamname }}
-                                        <h6 id="uitslag_{{ $wedstrijd->id }}">
-                                            @if($wedstrijd->home_score != "")
-                                                <span class="badge text-bg-success" style="background-color: #29286d; width: 100%">{{ $wedstrijd->home_score }} - {{ $wedstrijd->away_score }}</span>
-                                            @endif
-                                        </h6>
-                                    </a>
+                                    <td>-</td>
+                                    <td>@if($wedstrijd->awayteam->team_name != null)
+                                            {{ $wedstrijd->awayteam->team_name }}
+                                        @else
+                                            {{ $wedstrijd->awayteam->team_nr }}
+                                        @endif
                                     </td>
-                                @if($wedstrijd->round->round_nr <> $vorigeveld)
+                                    <td id="homescore_{{ $wedstrijd->id }}" class="text-end">{{ $wedstrijd->home_score }}</td>
+                                    <td>-</td>
+                                    <td id="awayscore_{{ $wedstrijd->id }}">{{ $wedstrijd->away_score }}</td>
+                                    <td><a id="edit_game_btn_{{ $wedstrijd->id }}" type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showEditUitslag({{ $wedstrijd->id }}, '{{ $wedstrijd->hometeam->team_name }}', '{{ $wedstrijd->awayteam->team_name }}', '{{ $wedstrijd->home_score }}', '{{ $wedstrijd->away_score }}'); return false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                        </svg>
+                                        </a></td>
                                 </tr>
-                                @endif
 
                             @endforeach
 
@@ -162,12 +145,12 @@
                     <div class="accordion" id="accordionPoules">
                         @foreach($poules as $poule)
                         <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading_{{ $poule->poule_name }}">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{ $poule->poule_name }}" aria-expanded="true" aria-controls="collapse_{{ $poule->poule_name }}">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                     Poule {{ $poule->poule_name }}
                                 </button>
                             </h2>
-                            <div id="collapse_{{ $poule->poule_name }}" class="accordion-collapse collapse" aria-labelledby="heading_{{ $poule->poule_name }}" data-bs-parent="#accordionPoules">
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                 <div class="accordion-body" style="padding: 10px 8px; background-color: white">
                                     <table class="table table-sm w-auto">
                                         @foreach($poule->teams as $team)
@@ -177,6 +160,11 @@
                                             </tr>
                                         @endforeach
                                     </table>
+                                    {{--<ol>
+                                    @foreach($poule->teams as $team)
+                                            <li class="team_{{ $team->team_nr }}"><a href="#" onclick="highLight({{ $team->team_nr }})">{{ $team->team_name }}</a> </li>
+                                    @endforeach
+                                    </ol>--}}
                                     <div class="row">
                                     <div class="d-grid col-4 mx-auto">
                                     <button class="btn btn-sm" style="background-color: #9ec4d5;" type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showEditPoule({{ $poule->id }}); return false">
@@ -239,11 +227,11 @@
                     <div class="col-md-2">
                         <input type="hidden" id="inputId" value="${ id }">
                     </div>
-                    <div class="col-md-4 text-center">
+                    <div class="col-md-4">
                         <label id="labelHomeScore" for="inputHomeScore" class="form-label">${ thuisteam }</label>
                         <input type="text" class="form-control text-center" id="inputHomeScore" name="inputHomeScore" value="${ thuisscore }">
                     </div>
-                    <div class="col-md-4 text-center">
+                    <div class="col-md-4">
                         <label id="labelAwayScore" for="inputAwayScore" class="form-label">${ uitteam }</label>
                         <input type="text" class="form-control text-center" id="inputAwayScore" name="inputAwayScore" value="${ uitscore }">
                     </div>
@@ -280,7 +268,9 @@
                     type: 'put',
                     success: function (){
                         //alert("goed gegaan");
-                        $("#uitslag_" + id).empty().append("<span class='badge text-bg-success' style='background-color: #29286d; width: 100%'>" + homescore + " - " + awayscore)
+                        $("#homescore_" + id).empty().append(homescore);
+                        $("#awayscore_" + id).empty().append(awayscore);
+                        //$("#edit_game_btn_" + id).attr("onclick", changeLastTwoFunctionParam($("#edit_game_btn_" + id).attr("onclick"), homescore, awayscore));
                         $("#edit_game_btn_" + id).attr("onclick", "showEditUitslag(" + id + ", '" + hometeam + "', '" + awayteam + "', " + homescore + ", " + awayscore + ")");
                         //sluit de modal
                         $('#edit-modal').modal('toggle');
@@ -397,19 +387,17 @@
             }
 
             function highLight(teamnr){
-                if($(".team_" + teamnr).hasClass("alert alert-warning"))
+                if($(".team_" + teamnr).hasClass("alert alert-primary"))
                 {
-                    $("tr").removeClass("alert alert-warning");
-                    $("td").removeClass("bg-warning");
-                    //$("li").removeClass("alert alert-primary");
+                    $("tr").removeClass("alert alert-primary");
+                    $("li").removeClass("alert alert-primary");
                 }
                 else
                 {
-                    $("tr").removeClass("alert alert-warning");
-                    $("td").removeClass("bg-warning");
-                    //$("li").removeClass("alert alert-primary");
-                    $(".wedstr_" + teamnr).addClass("bg-warning");
-                    $(".team_" + teamnr).addClass("alert alert-warning");
+                    $("tr").removeClass("alert alert-primary");
+                    $("li").removeClass("alert alert-primary");
+                    $(".wedstr_" + teamnr).addClass("alert alert-primary");
+                    $(".team_" + teamnr).addClass("alert alert-primary");
                 }
             }
 

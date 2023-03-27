@@ -2,7 +2,7 @@
 
 @section('content')
 <?php
-/*    echo "<pre>";
+/*   echo "<pre>";
     print_r($wedstrijden);
     echo "</pre>";*/
 ?>
@@ -17,39 +17,58 @@
         <div class="col-1 text-end"><span class="btn btn-outline-secondary" id="timer" style="margin-top: 25px"></span></div>
     </div>
     <div class="row">
-        <div class="col-lg">
+        <div class="col-lg-7">
             <h2>Wedstrijdschema poule {{ $wedstrijden[0]->hometeam->poule->poule_name }}</h2>
             <table class="table table-hover w-auto">
-                <thead><th></th><th colspan="3">tijd</th><th colspan="3">wedstrijd</th><th colspan="3">uitslag</th></thead>
+                <thead><th colspan="2">ronde en tijd</th><th colspan="5"><span class="badge text-bg-secondary">veld</span>
+                    wedstrijd</th></thead>
+                <?php $vorigeveld = 0  ?>
                 @foreach($wedstrijden as $wedstrijd)
-                    <tr class="wedstr_{{ $wedstrijd->hometeam->team_nr }} wedstr_{{ $wedstrijd->awayteam->team_nr }}">
-                        <td class="text-end"><b>{{ $wedstrijd->round->round_nr }}.</b></td>
-                        <td>{{ Carbon\Carbon::parse($wedstrijd->round->start)->translatedFormat('H:i') }}</td>
-                        <td>-</td>
-                        <td>{{ Carbon\Carbon::parse($wedstrijd->round->end)->translatedFormat('H:i') }}</td>
-                        <td>@if($wedstrijd->hometeam->team_name != null)
-                                {{ $wedstrijd->hometeam->team_name }}
-                            @else
-                                {{ $wedstrijd->hometeam->team_nr }}
-                            @endif
+                    @if($wedstrijd->round->round_nr <> $vorigeveld)
+                            <?php $vorigeveld = $wedstrijd->round->round_nr ?>
+                        <tr>
+                        <td class="text-end align-middle border-end"><b>{{ $wedstrijd->round->round_nr }}.</b></td>
+                        <td class="border-end align-middle">{{ Carbon\Carbon::parse($wedstrijd->round->start)->translatedFormat('H:i') }}
+                            - {{ Carbon\Carbon::parse($wedstrijd->round->end)->translatedFormat('H:i') }}
                         </td>
-                        <td>-</td>
-                        <td>@if($wedstrijd->awayteam->team_name != null)
-                                {{ $wedstrijd->awayteam->team_name }}
-                            @else
-                                {{ $wedstrijd->awayteam->team_nr }}
-                            @endif
+                    @endif
+                    <?php
+                    if(is_null($wedstrijd->hometeam->team_name))
+                    {
+                        $hometeamname = $wedstrijd->hometeam->team_nr;
+                        $awayteamname = $wedstrijd->awayteam->team_nr;
+                    }
+                    else
+                    {
+                        $hometeamname = $wedstrijd->hometeam->team_name;
+                        $awayteamname = $wedstrijd->awayteam->team_name;
+                    }
+                    ?>
+                        <td class="wedstr_{{ $wedstrijd->hometeam->team_nr }} wedstr_{{ $wedstrijd->awayteam->team_nr }} text-center border-end align-middle border-top" style="padding-bottom: 0px">
+                            <div class="d-grid">
+                            <button class="btn btn-light position-relative">
+                                <span class="badge text-bg-secondary" style="margin-left: -10px;">{{ $wedstrijd->pitch->pitch_name }}</span>
+                                {{ $hometeamname }} - {{ $awayteamname }}
+{{--                                    <span class="position-absolute top-0 start-200 translate-middle badge rounded-pill bg-secondary">
+                                        {{ $wedstrijd->poule_round }} | {{ $wedstrijd->pitch->pitch_name }}
+                                    </span>--}}
+                                </button>
+                        </div>
+                                <h6 id="uitslag_{{ $wedstrijd->id }}">
+                                    @if($wedstrijd->home_score != "")
+                                        <span class="badge text-bg-success" style="background-color: #29286d; width: 100%">{{ $wedstrijd->home_score }} - {{ $wedstrijd->away_score }}</span>
+                                    @endif
+                                </h6>
                         </td>
-                        <td id="homescore_{{ $wedstrijd->id }}" class="text-end">{{ $wedstrijd->home_score }}</td>
-                        <td>-</td>
-                        <td id="awayscore_{{ $wedstrijd->id }}">{{ $wedstrijd->away_score }}</td>
-                    </tr>
+                    @if($wedstrijd->round->round_nr <> $vorigeveld)
+                        </tr>
+                    @endif
 
                 @endforeach
 
             </table>
         </div>
-        <div class="col-lg">
+        <div class="col-lg-5">
             <h2>Stand poule {{ $wedstrijden[0]->hometeam->poule->poule_name }}</h2>
             <table class="table table-hover">
                 <thead>
@@ -59,7 +78,7 @@
                 @foreach($sortedteams as $sortedteam)
                     <tr class="team_{{ $sortedteam->team_nr }}">
                         <td class="text-end border-end"><b>{{ $plek }}.</b></td>
-                        <td class="text-end border-end" style="padding-right: 15px;">{{ $sortedteam->team_nr }}</td>
+                        <td class="text-end border-end" style="padding-right: 15px;"><a href="#" class="link link-underlineless" onclick="highLight({{ $sortedteam->team_nr }})">{{ $sortedteam->team_nr }}</a></td>
                         <td><a href="#" class="link link-underlineless" onclick="highLight({{ $sortedteam->team_nr }})">{{ $sortedteam->team_name }}</a></td>
                         <td class="text-end text-bg-primary">{{ $sortedteam->punten }}</td>
                         <td class="text-end border-end">{{ $sortedteam->gespeeld }}</td>
@@ -68,7 +87,7 @@
                         <td class="text-end border-end">{{ $sortedteam->verloren }}</td>
                         <td class="text-end">+{{ $sortedteam->doelpvoor }}</td>
                         <td class="text-end">-{{ $sortedteam->doelptegen }}</td>
-                        <td class="text-end text-bg-warning">{{ $sortedteam->doelsdaldo }}</td>
+                        <td class="text-end text-bg-info">{{ $sortedteam->doelsdaldo }}</td>
                     </tr>
                         <?php $plek++; ?>
                     @endforeach
@@ -85,10 +104,27 @@
 
 @section('scripts')
     <script type="text/javascript">
-        function highLight(teamnr){
+/*        function highLight(teamnr){
             $("tr").removeClass("alert alert-primary");
             $(".wedstr_" + teamnr).addClass("alert alert-primary");
             $(".team_" + teamnr).addClass("alert alert-primary");
+        }*/
+
+        function highLight(teamnr){
+            if($(".team_" + teamnr).hasClass("alert alert-warning"))
+            {
+                $("tr").removeClass("alert alert-warning");
+                $("td").removeClass("bg-warning");
+                //$("li").removeClass("alert alert-primary");
+            }
+            else
+            {
+                $("tr").removeClass("alert alert-warning");
+                $("td").removeClass("bg-warning");
+                //$("li").removeClass("alert alert-primary");
+                $(".wedstr_" + teamnr).addClass("bg-warning");
+                $(".team_" + teamnr).addClass("alert alert-warning");
+            }
         }
 
         function clock(){

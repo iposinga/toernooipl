@@ -17,9 +17,17 @@ return new class extends Migration
             $table->id();
             //$table->integer('poule_id');
             $table->foreignID('poule_id')->constrained('poules')->onDelete('cascade');
-            $table->mediumInteger('team_nr');
+            $table->smallInteger('team_nr');
             $table->string('team_name')->nullable();
             $table->string('team_class')->nullable();
+            $table->smallInteger('played')->default(0);
+            $table->smallInteger('points')->default(0);
+            $table->smallInteger('win')->default(0);
+            $table->smallInteger('draw')->default(0);
+            $table->smallInteger('loss')->default(0);
+            $table->smallInteger('goalagainst')->default(0);
+            $table->smallInteger('goal')->default(0);
+            $table->smallInteger('goaldifference')->default(0);
             $table->timestamps();
         });
     }

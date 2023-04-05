@@ -13,7 +13,11 @@
                 <div class="card-header" style="background-color: #29286d; color: white;">
                     <div class="row">
                         <div class="col" style="font-size: larger">{{ __('Dashboard') }}</div>
-                        <div class="col text-end"><a style="text-decoration: none;" type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showAddTournement()"><i class="bi bi-plus-square"></i></a></div>
+                        <div class="col text-end">
+                            <a style="text-decoration: none;" type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showAddTournement()">
+                                <i class="bi bi-plus-square"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
 

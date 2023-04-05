@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\FinalgameController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PouleController;
+use App\Http\Controllers\RoundController;
 use App\Http\Controllers\TournementController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -38,16 +40,20 @@ Route::middleware('auth')->group(callback: function() {
     Route::put('/games/{id}', [GameController::class, 'update'])->name('games.update');
     //Route::post('/updatepouledata/{id}', [PouleController::class, 'update'])->name('updatepouledata'); KAN WEG
     Route::post('poules/{id}', [PouleController::class, 'update'])->name('poules.update');
+    Route::post('/rounds/{id}', [RoundController::class, 'update'])->name('rounds.update');
     //om te editen en te showen
     //Route::post('/editpouledata/{id}', [PouleController::class, 'edit'])->name('editpouledata'); KAN WEG
     Route::get('poules/{id}/edit', [PouleController::class, 'edit'])->name('poules.edit');
+    Route::get('finalgames/{id}/edit', [FinalgameController::class, 'edit'])->name('finalgames.edit');
     //Route::post('/showpouledata/{id}', [PouleController::class, 'show'])->name('showpouledata'); KAN WEG
     Route::get('poules/{id}/stand', [PouleController::class, 'show_stand'])->name('poules.show_stand');
+    Route::get('poules/{id}/returnstand', [PouleController::class, 'returnstand'])->name('poules.returnstand');
     //om toe te voegen aan een formulier via jQuery
     Route::post('/adduserdata/{id}', [TournementController::class, 'addusers'])->name('adduserdata');
     //om een nieuw record op te slaan
     Route::post('/tournement/store/', [TournementController::class, 'store'])->name('storetournement');
     Route::post('/tournementuser/store/{id}', [TournementController::class, 'tournementuserstore'])->name('storetournementuser');
+    Route::post('/round/store/', [RoundController::class, 'store'])->name('storeround');
     //om een toernooi te deleten
     //Route::post('/tournement/delete/{id}', [TournementController::class, 'delete'])->name('deletetournement');
     Route::delete('/tournement/{id}', [TournementController::class, 'destroy'])->name('tournements.destroy');

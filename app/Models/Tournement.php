@@ -19,7 +19,7 @@ class Tournement extends Model
         'teams_nmbr',
         'pitches_nmbr',
         'poules_nmbr',
-        'match_duration',
+        'game_duration',
         'change_duration',
         'is_entire_comp',
         'is_public',

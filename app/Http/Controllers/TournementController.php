@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Finalgame;
 use App\Models\Game;
 use App\Models\Pitch;
 use App\Models\Poule;
@@ -49,7 +50,13 @@ class TournementController extends Controller
             ->orderBy('round_id', 'asc')
             ->orderBy('pitch_id', 'asc')
             ->get();
-        return view('tournement.index', compact(['tournement', 'pitches', 'poules','games']));
+        $finalgames = Finalgame::with('round', 'pitch', 'homepoule', 'awaypoule', 'hometeam', 'awayteam')
+            ->where('tournement_id', $id)
+            ->orderBy('round_id', 'asc')
+            ->orderBy('pitch_id', 'asc')
+            ->get();
+        $dates = $this->getTournementDates($id);
+        return view('tournement.index', compact(['tournement', 'pitches', 'poules','games','finalgames','dates']));
     }
 
     public function store(Request $request): RedirectResponse
@@ -61,9 +68,10 @@ class TournementController extends Controller
         $tournement->teams_nmbr = $request->input('inputTeams');
         $tournement->poules_nmbr = $request->input('inputPoules');
         $tournement->pitches_nmbr = $request->input('inputVelden');
-        $tournement->match_duration = $request->input('inputDuur');
+        $tournement->game_duration = $request->input('inputDuur');
         $tournement->change_duration = $request->input('inputPauze');
-        $tournement->is_entire_comp = $request->input('inputCompetitieType');
+        if($request->input('inputCompetitieType') !== null)
+            $tournement->is_entire_comp = $request->input('inputCompetitieType');
         $tournement->save();
         $tournement->users()->attach([$tournement->id => ['user_id' => Auth::user()->id, 'is_admin' => 1]]);
         $this->setupTournement($tournement);
@@ -142,19 +150,20 @@ class TournementController extends Controller
             'poule_name' => 'A'
         ]);
         //and attach the teams
-        $i = 1;
-        while ($i <= $tournement->teams_nmbr) {
+        $teamnr = 1;
+        while ($teamnr <= $tournement->teams_nmbr) {
             Team::create([
                 'poule_id' => $poule->id,
-                'team_nr' => $i
+                'team_nr' => $teamnr,
+                'team_name' => 'Team '.$teamnr
             ]);
-            $i++;
+            $teamnr++;
         }
         //create the rounds
         $aantalronden = ($tournement->teams_nmbr * ($tournement->teams_nmbr - 1)) / 2;
         $j = 1;
         $start = $tournement->tournement_date;
-        $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $tournement->match_duration . ' minutes'));
+        $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $tournement->game_duration . ' minutes'));
         while ($j <= $aantalronden) {
             Round::create([
                 'tournement_id' => $tournement->id,
@@ -163,7 +172,7 @@ class TournementController extends Controller
                 'end' => $end
             ]);
             $start = date('Y-m-d H:i:s', strtotime($end . ' +' . $tournement->change_duration . ' minutes'));
-            $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $tournement->match_duration . ' minutes'));
+            $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $tournement->game_duration . ' minutes'));
             $j++;
         }
         //create the games en attach to rounds
@@ -181,6 +190,7 @@ class TournementController extends Controller
         foreach($rounds as $round)
         {
             Game::create([
+                'tournement_id' => $tournement->id,
                 'round_id' => $round->id,
                 'pitch_id' => $pitch->id,
                 'hometeam_id' => $teams[$wedstrschema[$k][0]]->id,
@@ -234,7 +244,7 @@ class TournementController extends Controller
         //attach the rounds to the tournement
         $j = 1;
         $start = $tournement->tournement_date;
-        $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $tournement->match_duration . ' minutes'));
+        $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $tournement->game_duration . ' minutes'));
         while ($j <= $nmbrounds) {
             Round::create([
                 'tournement_id' => $tournement->id,
@@ -243,7 +253,7 @@ class TournementController extends Controller
                 'end' => $end
             ]);
             $start = date('Y-m-d H:i:s', strtotime($end . ' +' . $tournement->change_duration . ' minutes'));
-            $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $tournement->match_duration . ' minutes'));
+            $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $tournement->game_duration . ' minutes'));
             $j++;
         }
         //attach the games to the tournement
@@ -327,4 +337,21 @@ class TournementController extends Controller
         return redirect()->route('home')
             ->withSuccess('Het toernooi is succesvol verwijderd.');
     }
+
+    private function getTournementDates(int $tournementid): array
+    {
+        $dates = array();
+        $rounds = Round::where('tournement_id', $tournementid)->orderBy('round_nr')->get();
+        $vorigestart = "";
+        foreach ($rounds as $round)
+        {
+            if(date('d', strtotime($round->start)) <> date('d', strtotime($vorigestart)))
+            {
+                array_push($dates, $round->start);
+                $vorigestart = $round->start;
+            }
+        }
+        return $dates;
+    }
+
 }

@@ -20,8 +20,10 @@
         <div class="col-lg-7">
             <h2>Wedstrijdschema poule {{ $wedstrijden[0]->hometeam->poule->poule_name }}</h2>
             <table class="table table-hover w-auto">
-                <thead><th colspan="2">ronde en tijd</th><th colspan="5"><span class="badge text-bg-secondary">veld</span>
-                    wedstrijd</th></thead>
+                <thead>
+                    <th colspan="2">ronde en tijd</th>
+                    <th colspan="5">@if($wedstrijden[0]->round->tournement->pitches_nmbr > 1)<span class="badge text-bg-secondary">veld</span>@endif wedstrijd</th>
+                </thead>
                 <?php $vorigeveld = 0  ?>
                 @foreach($wedstrijden as $wedstrijd)
                     @if($wedstrijd->round->round_nr <> $vorigeveld)
@@ -47,11 +49,8 @@
                         <td class="wedstr_{{ $wedstrijd->hometeam->team_nr }} wedstr_{{ $wedstrijd->awayteam->team_nr }} text-center border-end align-middle border-top" style="padding-bottom: 0px">
                             <div class="d-grid">
                             <button class="btn btn-light position-relative">
-                                <span class="badge text-bg-secondary" style="margin-left: -10px;">{{ $wedstrijd->pitch->pitch_name }}</span>
+                                @if($wedstrijden[0]->round->tournement->pitches_nmbr > 1)<span class="badge text-bg-secondary" style="margin-left: -10px;">{{ $wedstrijd->pitch->pitch_name }}</span>@endif
                                 {{ $hometeamname }} - {{ $awayteamname }}
-{{--                                    <span class="position-absolute top-0 start-200 translate-middle badge rounded-pill bg-secondary">
-                                        {{ $wedstrijd->poule_round }} | {{ $wedstrijd->pitch->pitch_name }}
-                                    </span>--}}
                                 </button>
                         </div>
                                 <h6 id="uitslag_{{ $wedstrijd->id }}">

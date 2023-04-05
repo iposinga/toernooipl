@@ -20,7 +20,7 @@ return new class extends Migration
             $table->smallInteger('teams_nmbr');
             $table->smallInteger('pitches_nmbr');
             $table->smallInteger('poules_nmbr');
-            $table->smallInteger('match_duration');
+            $table->smallInteger('game_duration');
             $table->smallInteger('change_duration')->default(0);
             $table->boolean('is_entire_comp')->default(0);
             $table->boolean('is_public')->default(0);

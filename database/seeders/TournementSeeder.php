@@ -23,23 +23,10 @@ class TournementSeeder extends Seeder
                 'teams_nmbr' => 6,
                 'pitches_nmbr' => 1,
                 'poules_nmbr' => 1,
-                'match_duration' => 12,
+                'game_duration' => 12,
                 'change_duration' => 0,
                 'is_entire_comp' => 0,
                 'is_public' => 0,
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-            ),
-            array(
-                'tournement_name' => 'Lopsterzaaltoernooi JO15',
-                'tournement_date' => '2022-12-29',
-                'teams_nmbr' => 6,
-                'pitches_nmbr' => 1,
-                'poules_nmbr' => 1,
-                'start_time' => '11:15:00',
-                'match_duration' => 10,
-                'is_entire_comp' => 0,
-                'is_public' => 1,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             )

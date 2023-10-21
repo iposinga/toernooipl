@@ -20,6 +20,8 @@ class PouleSeeder extends Seeder
             array(
                 'tournement_id' => 1,
                 'poule_name' => 'A',
+                'teams_nmbr' => 6,
+                'games_nmbr' => 15,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             )

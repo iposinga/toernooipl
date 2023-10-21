@@ -4,7 +4,7 @@
     print_r($users);
     echo "</pre>";*/
 ?>
-<form id="add_users_form" class="row g-3" method="post" action="{{ route('storetournementuser', ['id' => $tournementid]) }}">
+<form id="add_users_form" class="row g-3" method="post" action="{{ route('tournement_user.store', ['id' => $tournementid]) }}">
     {{ csrf_field() }}
     <div class="col-md-2">
     </div>

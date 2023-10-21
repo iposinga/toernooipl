@@ -28,6 +28,7 @@ return new class extends Migration
             $table->smallInteger('goalagainst')->default(0);
             $table->smallInteger('goal')->default(0);
             $table->smallInteger('goaldifference')->default(0);
+            $table->smallInteger('team_ranking')->nullable();
             $table->timestamps();
         });
     }

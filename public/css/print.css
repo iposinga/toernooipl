@@ -1,0 +1,37 @@
+.groot {
+    font-size: 40px;
+    border: 2px solid;
+    text-align: center;
+    width: 150px;
+    height: 90px;
+}
+
+.middelgroot {
+    font-size: 30px;
+    border: 2px solid;
+    text-align: center;
+    width: 150px;
+    height: 90px;
+}
+
+.noborder {
+    border: 0;
+    text-align: center;
+}
+.wrap {
+    overflow: auto;
+    page-break-after: always;
+}
+.a5links {
+    width: 480px;
+    margin-top: 0;
+    margin-left: 0;
+    float: left;
+}
+.a5rechts {
+    width: 480px;
+    margin-top: 0;
+    float: right;
+    margin-left: 20px;
+    margin-right: 0;
+}

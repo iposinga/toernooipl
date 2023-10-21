@@ -18,6 +18,8 @@ return new class extends Migration
             //$table->integer('tournement_id');
             $table->foreignID('tournement_id')->constrained('tournements')->onDelete('cascade');
             $table->string('poule_name');
+            $table->smallInteger('teams_nmbr');
+            $table->smallInteger('games_nmbr');
             $table->timestamps();
         });
     }

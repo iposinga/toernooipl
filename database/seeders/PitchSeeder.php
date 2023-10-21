@@ -19,7 +19,8 @@ class PitchSeeder extends Seeder
         DB::table('pitches')->insert(
             array(
                 'tournement_id' => 1,
-                'pitch_name' => '1',
+                'pitch_nr' => 1,
+                'pitch_name' => 'veld 1',
                 'pitch_spot' => 'Boshal',
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')

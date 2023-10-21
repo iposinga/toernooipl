@@ -13,6 +13,7 @@ class Pitch extends Model
 
     protected $fillable = [
         'tournement_id',
+        'pitch_nr',
         'pitch_name',
         'pitch_spot'
     ];
@@ -25,5 +26,19 @@ class Pitch extends Model
     public function tournement(): BelongsTo
     {
         return $this->belongsTo(Tournement::class);
+    }
+
+    public static function makePitches(int $tournement_id, int $pitches_nmbr )
+    {
+        $counter = 1;
+        while($counter <= $pitches_nmbr)
+        {
+            Pitch::create([
+                'tournement_id' => $tournement_id,
+                'pitch_nr' => $counter,
+                'pitch_name' => "veld ".$counter
+            ]);
+            $counter++;
+        }
     }
 }

@@ -49,7 +49,7 @@
                         <td class="wedstr_{{ $wedstrijd->hometeam->team_nr }} wedstr_{{ $wedstrijd->awayteam->team_nr }} text-center border-end align-middle border-top" style="padding-bottom: 0px">
                             <div class="d-grid">
                             <button class="btn btn-light position-relative">
-                                @if($wedstrijden[0]->round->tournement->pitches_nmbr > 1)<span class="badge text-bg-secondary" style="margin-left: -10px;">{{ $wedstrijd->pitch->pitch_name }}</span>@endif
+                                @if($wedstrijden[0]->round->tournement->pitches_nmbr > 1)<span class="badge text-bg-secondary" style="margin-left: -10px;">{{ $wedstrijd->pitch->pitch_nr }}</span>@endif
                                 {{ $hometeamname }} - {{ $awayteamname }}
                                 </button>
                         </div>
@@ -74,19 +74,19 @@
                 <tr><th class="border-end"></th><th class="text-center border-end">team</th><th class="border-end">naam</th><th class="text-center">p</th><th class="text-center border-end">g</th><th class="text-center">w</th><th class="text-center">g</th><th class="text-center border-end">v</th><th colspan="3" class="text-center">doelsaldo</th></tr>
                 </thead>
                 <?php $plek = 1 ?>
-                @foreach($sortedteams as $sortedteam)
-                    <tr class="team_{{ $sortedteam->team_nr }}">
+                @foreach($teams as $team)
+                    <tr class="team_{{ $team->team_nr }}">
                         <td class="text-end border-end"><b>{{ $plek }}.</b></td>
-                        <td class="text-end border-end" style="padding-right: 15px;"><a href="#" class="link link-underlineless" onclick="highLight({{ $sortedteam->team_nr }})">{{ $sortedteam->team_nr }}</a></td>
-                        <td><a href="#" class="link link-underlineless" onclick="highLight({{ $sortedteam->team_nr }})">{{ $sortedteam->team_name }}</a></td>
-                        <td class="text-end text-bg-primary">{{ $sortedteam->punten }}</td>
-                        <td class="text-end border-end">{{ $sortedteam->gespeeld }}</td>
-                        <td class="text-end">{{ $sortedteam->gewonnen }}</td>
-                        <td class="text-end">{{ $sortedteam->gelijk }}</td>
-                        <td class="text-end border-end">{{ $sortedteam->verloren }}</td>
-                        <td class="text-end">+{{ $sortedteam->doelpvoor }}</td>
-                        <td class="text-end">-{{ $sortedteam->doelptegen }}</td>
-                        <td class="text-end text-bg-info">{{ $sortedteam->doelsdaldo }}</td>
+                        <td class="text-end border-end" style="padding-right: 15px;"><a href="#" class="link link-underlineless" onclick="highLight({{ $team->team_nr }})">{{ $team->team_nr }}</a></td>
+                        <td><a href="#" class="link link-underlineless" onclick="highLight({{ $team->team_nr }})">{{ $team->team_name }}</a></td>
+                        <td class="text-end text-bg-primary">{{ $team->points }}</td>
+                        <td class="text-end border-end">{{ $team->played }}</td>
+                        <td class="text-end">{{ $team->win }}</td>
+                        <td class="text-end">{{ $team->draw }}</td>
+                        <td class="text-end border-end">{{ $team->loss }}</td>
+                        <td class="text-end">+{{ $team->goal }}</td>
+                        <td class="text-end">-{{ $team->goalagainst }}</td>
+                        <td class="text-end text-bg-info">{{ $team->goaldifference }}</td>
                     </tr>
                         <?php $plek++; ?>
                     @endforeach
@@ -102,78 +102,5 @@
 @endsection
 
 @section('scripts')
-    <script type="text/javascript">
-/*        function highLight(teamnr){
-            $("tr").removeClass("alert alert-primary");
-            $(".wedstr_" + teamnr).addClass("alert alert-primary");
-            $(".team_" + teamnr).addClass("alert alert-primary");
-        }*/
-
-        function highLight(teamnr){
-            if($(".team_" + teamnr).hasClass("alert alert-warning"))
-            {
-                $("tr").removeClass("alert alert-warning");
-                $("td").removeClass("bg-warning");
-                //$("li").removeClass("alert alert-primary");
-            }
-            else
-            {
-                $("tr").removeClass("alert alert-warning");
-                $("td").removeClass("bg-warning");
-                //$("li").removeClass("alert alert-primary");
-                $(".wedstr_" + teamnr).addClass("bg-warning");
-                $(".team_" + teamnr).addClass("alert alert-warning");
-            }
-        }
-
-        function clock(){
-            let time = new Date()
-            let hr = time.getHours()
-            let min = time.getMinutes()
-            let sec = time.getSeconds()
-            if (hr < 10){
-                hr = " " + hr
-            }
-            if (min < 10){
-                min = "0" + min
-            }
-            if (sec < 10){
-                sec = "0" + sec
-            }
-            document.clockForm.clockButton.value = hr + ":" + min
-            setTimeout("clock()", 1000)
-        }
-
-        window.onload = clock;
-
-        function checklength(i) {
-            'use strict';
-            if (i < 10) {
-                i = "0" + i;
-            }
-            return i;
-        }
-        let minutes, seconds, count, counter;
-        count = 61; //seconds
-        counter = setInterval(timer, 1000);
-
-        function timer() {
-            'use strict';
-            count = count - 1;
-            minutes = checklength(Math.floor(count / 60));
-            seconds = checklength(count - minutes * 60);
-            if (count < 0) {
-                clearInterval(counter);
-                return;
-            }
-            document.getElementById("timer").innerHTML = ' ' + minutes + ':' + seconds + ' ';
-            if (count === 0) {
-                location.reload();
-            }
-        }
-
-        function pageloadEvery(t) {
-            setTimeout('location.reload()', t);
-        }
-    </script>
+    <script src="{{ asset('js/poule.index.js') }}"></script>
 @endsection

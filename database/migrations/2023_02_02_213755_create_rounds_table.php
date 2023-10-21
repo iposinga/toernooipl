@@ -18,6 +18,7 @@ return new class extends Migration
             //$table->integer('tournement_id');
             $table->foreignID('tournement_id')->constrained('tournements')->onDelete('cascade');
             $table->mediumInteger('round_nr');
+            $table->mediumInteger('finalround');
             $table->timestamp('start');
             $table->timestamp('end');
             $table->timestamps();

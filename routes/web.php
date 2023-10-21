@@ -3,8 +3,10 @@
 use App\Http\Controllers\FinalgameController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PitchController;
 use App\Http\Controllers\PouleController;
 use App\Http\Controllers\RoundController;
+use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TournementController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -20,45 +22,40 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-//Route::get('/poule/{id}', [PouleController::class, 'index'])->name('poule.index'); KAN WEG
+Route::get('/', function () { return view('welcome'); });
 Route::get('/poules/{id}', [PouleController::class, 'show'])->name('poules.show');
+Route::get('/tournement_gamesheets/{id}', [TournementController::class, 'gamesheets'])->name('tournement.gamesheets');
+//helper class die alle routes genereert die nodig zijn voor authenticatie, inclusief logout
 Auth::routes();
-
-
-//Route::get('/tournement/{id}', [GameController::class, 'index'])->name('tournement.index');
 Route::middleware('auth')->group(callback: function() {
+    //routes die gebruikt worden in js-functies ('/js/....') of bij een ajax-call ('/aj/......') en die dus niet aangeroepen kunnen worden met de naam van een route en dus ook geen naam hoeven hebben
+    Route::match(['put', 'get', 'post'], '/js/tournements/store', [TournementController::class, 'store']);
+    Route::get('/aj/tournement_users/add', [TournementController::class, 'addusers']);
+    Route::match(['put', 'get'], '/aj/games/update', [GameController::class, 'update']);
+    Route::get('/aj/teams/edit', [TeamController::class, 'edit']);
+    Route::get('/aj/pitches/edit', [PitchController::class, 'edit']);
+    //Route::post('/aj/rounds/update', [RoundController::class, 'update']);
+    Route::match(['put', 'get'], '/aj/rounds/update', [RoundController::class, 'update']);
+    Route::post('/js/rounds/store', [RoundController::class, 'store']);
+    Route::get('/aj/finalgames/edit', [FinalgameController::class, 'edit']);
+    //nodig voor het koppelen van teams aan finalerondes op basis van poule en ranking
+    Route::get('/aj/teams/stand', [TeamController::class, 'stand']);
+    //voor de stand van de teams in een poule
+    Route::get('/aj/teams/show', [TeamController::class, 'show']);
+    //voor de teams in finalgame.edit.js
+    Route::get('/aj/teams/showinjs', [TeamController::class, 'showinjs']);
+    Route::post('/js/finalgames/update', [FinalgameController::class, 'update']);
+    Route::delete('/js/finalgames/destroy', [FinalgameController::class, 'destroy']);
+    Route::delete('/js/tournements/destroy', [TournementController::class, 'destroy']);
+    Route::delete('/js/tournement_user/destroy', [TournementController::class, 'destroytournementuser']);
     //routes die tot een blade leiden en waarvan de url ook daadwerkelijk zichtbaar wordt
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::get('/tournement/{id}', [TournementController::class, 'show'])->name('tournement.show');
-    //routes die eigenlijk alleen maar hulp-routes zijn
-    //Route::get('/game/edit/{id}', [GameController::class, 'edit'])->name('game.edit');
-    //Route::get('/editgamedata/{id}', [GameController::class, 'edit'])->name('editgamedata');
-    //om up te daten
-    Route::put('/games/{id}', [GameController::class, 'update'])->name('games.update');
-    //Route::post('/updatepouledata/{id}', [PouleController::class, 'update'])->name('updatepouledata'); KAN WEG
-    Route::post('poules/{id}', [PouleController::class, 'update'])->name('poules.update');
-    Route::post('/rounds/{id}', [RoundController::class, 'update'])->name('rounds.update');
-    //om te editen en te showen
-    //Route::post('/editpouledata/{id}', [PouleController::class, 'edit'])->name('editpouledata'); KAN WEG
-    Route::get('poules/{id}/edit', [PouleController::class, 'edit'])->name('poules.edit');
-    Route::get('finalgames/{id}/edit', [FinalgameController::class, 'edit'])->name('finalgames.edit');
-    //Route::post('/showpouledata/{id}', [PouleController::class, 'show'])->name('showpouledata'); KAN WEG
-    Route::get('poules/{id}/stand', [PouleController::class, 'show_stand'])->name('poules.show_stand');
-    Route::get('poules/{id}/returnstand', [PouleController::class, 'returnstand'])->name('poules.returnstand');
-    //om toe te voegen aan een formulier via jQuery
-    Route::post('/adduserdata/{id}', [TournementController::class, 'addusers'])->name('adduserdata');
-    //om een nieuw record op te slaan
-    Route::post('/tournement/store/', [TournementController::class, 'store'])->name('storetournement');
-    Route::post('/tournementuser/store/{id}', [TournementController::class, 'tournementuserstore'])->name('storetournementuser');
-    Route::post('/round/store/', [RoundController::class, 'store'])->name('storeround');
-    //om een toernooi te deleten
-    //Route::post('/tournement/delete/{id}', [TournementController::class, 'delete'])->name('deletetournement');
-    Route::delete('/tournement/{id}', [TournementController::class, 'destroy'])->name('tournements.destroy');
-    //om een toernooi te verwijderen
-    Route::resource('tournements', TournementController::class);
+    Route::get('/tournement/{id}/{poule_id}', [TournementController::class, 'show'])->name('tournement.show');
+    //om de teamnamen in een poule aan te passen
+    Route::post('/teams/{poule_id}/update', [TeamController::class, 'update'])->name('teams.update');
+    Route::post('/pitches/{tournement_id}/update', [PitchController::class, 'update'])->name('pitches.update');
+    //om een user te koppelen aan een toernooi
+    Route::post('/tournement_user/store/{id}', [TournementController::class, 'tournement_userstore'])->name('tournement_user.store');
 });
 
 

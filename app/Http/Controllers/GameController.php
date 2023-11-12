@@ -18,4 +18,22 @@ class GameController extends Controller
         $team = new Team;
         $team->updatestand($request->input('poule_id'));
     }
+    public function deletescore(Request $request)
+    {
+        Game::where('id', $request->input( 'id'))
+            ->update([
+            'home_score' => null,
+            'home_points' => null,
+            'home_win' => null,
+            'home_draw' => null,
+            'home_loss' => null,
+            'away_score' => null,
+            'away_points' => null,
+            'away_win' => null,
+            'away_draw' => null,
+            'away_loss' => null
+        ]);
+        $team = new Team;
+        $team->updatestand($request->input('poule_id'));
+    }
 }

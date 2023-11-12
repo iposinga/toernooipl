@@ -24,13 +24,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () { return view('welcome'); });
 Route::get('/poules/{id}', [PouleController::class, 'show'])->name('poules.show');
+Route::get('/tournement_program/{id}', [TournementController::class, 'program'])->name('tournement.program');
 Route::get('/tournement_gamesheets/{id}', [TournementController::class, 'gamesheets'])->name('tournement.gamesheets');
+Route::get('/tournement_gamesexport/{id}', [TournementController::class, 'export'])->name('tournement.gamesexport');
 //helper class die alle routes genereert die nodig zijn voor authenticatie, inclusief logout
 Auth::routes();
 Route::middleware('auth')->group(callback: function() {
     //routes die gebruikt worden in js-functies ('/js/....') of bij een ajax-call ('/aj/......') en die dus niet aangeroepen kunnen worden met de naam van een route en dus ook geen naam hoeven hebben
     Route::match(['put', 'get', 'post'], '/js/tournements/store', [TournementController::class, 'store']);
     Route::get('/aj/tournement_users/add', [TournementController::class, 'addusers']);
+    Route::get( '/aj/games/deletescore', [GameController::class, 'deletescore']);
     Route::match(['put', 'get'], '/aj/games/update', [GameController::class, 'update']);
     Route::get('/aj/teams/edit', [TeamController::class, 'edit']);
     Route::get('/aj/pitches/edit', [PitchController::class, 'edit']);

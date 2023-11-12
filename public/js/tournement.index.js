@@ -53,14 +53,36 @@ function showEditUitslag(id, poule_id, thuisteam, uitteam, thuisscore, uitscore)
                         <input type="text" class="form-control text-center" id="inputAwayScore" value="${ uitscore }">
                     </div>
                     </form>`;
-    let buttons = `<button id="secondaire-btn" type="reset" form="edit_uitslag_form" class="btn btn-secondary">Reset</button>
-                    <button id="primaire-btn" type="submit" form="edit_uitslag_form" class="btn btn-success">Bewaar</button>`;
+    let buttons = `<button id="secondaire-btn" type="button" onclick="deleteUitslag(${ id }, ${ poule_id }, '${ thuisteam }', '${ uitteam }'); return false;" class="btn btn-danger">Verwijder</button>
+                          <button id="secondaire-btn" type="reset" form="edit_uitslag_form" class="btn btn-secondary">Reset</button>
+                          <button id="primaire-btn" type="submit" form="edit_uitslag_form" class="btn btn-success">Bewaar</button>`;
     $(".modal-title").empty().append("Edit uitslag")
     $(".modal-body").empty().append(form)
     $(".modal-footer").empty().append(buttons)
     $("#inputHomeScore").focus()
 }
-
+function deleteUitslag(id, poule_id, thuisteam, uitteam)
+{
+    confirm("Weet je het zeker?")
+    {
+        $.ajax({
+            url: '/public/aj/games/deletescore',
+            data: {
+                id: id,
+                poule_id: poule_id
+            },
+            type: 'get',
+            success: function () {
+                $("#uitslag_" + id).empty();
+                $("#edit_game_btn_" + id).attr("onclick", "showEditUitslag(" + id + ", " + poule_id + ",'" + thuisteam + "','" + uitteam + "','','')");
+                $('#edit-modal').modal('toggle');
+            },
+            error: function () {
+                alert("Het is niet goed gegaan met het verwijderen van de uitslag; game_id = " + id);
+            }
+        })
+    }
+}
 function updateUitslag()
 {
     let id = $("#inputId").val()

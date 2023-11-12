@@ -1,0 +1,154 @@
+body { font-family:  Century Gothic, Verdana;
+    color: #696969; 
+	width: 100%;
+	}
+#menu ul {  
+    list-style-type: none;  
+	text-decoration: none;
+	
+}  
+#menu ul li {  
+    display: inline;
+	text-decoration: none;
+}  
+#menu ul li a {  
+  
+    padding: 15px;  
+    background-color: #676A65;  
+    color: white;  
+	text-decoration: none;
+}  
+#menu ul li a:hover {  
+    background-color: #0EB4B4;  
+} 
+
+.container {
+
+	width:  40%;
+	margin: 0 auto;
+	background: #FFFFFF;
+	border: 10px solid #C9C9C9;
+	padding: 10px; 
+	border-radius: 40px;
+	text-align: center;
+	position: relative;
+  	margin-top: 20px;
+}
+
+.schema {
+	
+text-decoration: none;
+}
+.met {
+    padding-left: 10px;
+    border: 1px solid;
+    padding: 0;
+    border-spacing: 0;
+}
+.zonder {
+	border: 0;
+    padding-left: 10px;
+    border-spacing: 10;
+}
+.wedstr {
+    padding-left: 10px;
+    border: 0;
+    padding: 0;
+    border-spacing: 0;
+}
+
+.wedstr {
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border: 1px solid;
+}
+td {
+
+    border: 1px solid;
+	white-space:nowrap;
+	
+}
+
+td {
+    padding: 0;
+	border: 100;
+}
+
+.groot {
+    font-size: 40px;
+    border: 2px solid;
+    text-align: center;
+    width: 150px;
+    height: 90px;
+}
+
+.middelgroot {
+    font-size: 30px;
+    border: 2px solid;
+    text-align: center;
+    width: 150px;
+    height: 90px;
+}
+
+.noborder {
+    border: 0;
+    text-align: center;
+}
+.wrap {
+    overflow: auto;
+    page-break-after: always;
+}
+.a5links {
+    width: 480px;
+    /*border: 1px solid;*/
+    margin-top: 0;
+    margin-left: 0;
+    float: left;
+}
+.a5rechts {
+    width: 480px;
+    /*border: 1px solid;*/
+    margin-top: 0;
+    float: right;
+    margin-left: 20px;
+    margin-right: 0;
+}
+
+.frame1 {
+      float:left;
+      width: 1270px;
+      height: 940px;
+      overflow: hidden; 
+    }
+.frame2 {
+      float:left;
+      width: 1270px;
+      height: 940px;
+      overflow: hidden; 
+    }
+.frame3 {
+      float:left;
+      width: 1270px;
+      height: 940px;
+      overflow: hidden; 
+    }
+.frame4 {
+      float:left;
+      width: 1270px;
+      height: 990px;
+      overflow: hidden; 
+    }
+.frame5 {
+      float:left;
+      width: 1270px;
+      height: 990px;
+      overflow: hidden; 
+    }
+.frame6 {
+      float:left;
+      width: 1270px;
+      height: 990px;
+      overflow: hidden; 
+    }    

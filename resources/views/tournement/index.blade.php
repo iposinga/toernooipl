@@ -103,15 +103,25 @@
                             <div class="col-4">
                                 {{ $tournement->tournement_name }}
                             </div>
-                            <div class="col-1">
+{{--                            <div class="col-1">
                                 <i class="bi bi-fullscreen"></i>
-                            </div>
+                            </div>--}}
                             <div class="col-1">
-                                <a type="button" href="{{ route('tournement.gamesheets', ['id' => $tournement->id]) }}" style="color: white" target="_blank">
+                                <a type="button" href="{{ route('tournement.program', ['id' => $tournement->id]) }}" style="color: white" target="_blank">
                                     <i class="bi bi-printer"></i>
                                 </a>
                             </div>
-                            <div class="col-2">
+                            <div class="col-1">
+                                <a type="button" href="{{ route('tournement.gamesheets', ['id' => $tournement->id]) }}" style="color: white" target="_blank">
+                                    <i class="bi bi-files"></i>
+                                </a>
+                            </div>
+                            <div class="col-1">
+                                <a type="button" href="{{ route('tournement.gamesexport', ['id' => $tournement->id]) }}" style="color: white">
+                                    <i class="bi bi-filetype-xlsx"></i>
+                                </a>
+                            </div>
+                            <div class="col-1">
                                 <a type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showDestroyAlert({{ $tournement->id }}); return false">
                                     <i class="bi bi-trash3"></i>
                                 </a>
@@ -156,7 +166,7 @@
                                         @endif
                                 @endif
                                 @if($wedstrijd->round->round_nr <> $vorigeronde)
-                                    <?php $vorigeronde = $wedstrijd->round->round_nr; ?>
+                                    @php($vorigeronde = $wedstrijd->round->round_nr)
                                 <tr>
                                     <td class="border-end align-middle"><span class="d-grid">
                                         <button class="btn btn-sm btn-secondary py-0 px-1" type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showEditRound( {{ $wedstrijd->round->id }}, {{$tournement->id}}, {{ $wedstrijd->round->round_nr }}, '{{ Carbon\Carbon::parse($wedstrijd->round->start)->translatedFormat('j-m-Y H:i') }}', {{ $wedstrijd->round->finalround }}); return false;">
@@ -338,8 +348,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-{{--                    <form id="edit_uitslag_form" class="row g-3">
-                    </form>--}}
                 </div>
                 <div class="modal-footer">
                 </div>

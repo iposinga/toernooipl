@@ -1,7 +1,7 @@
 @extends('layouts.print')
 
 @section('content')
-    <div class="container">
+
     <?php
     /*echo "<pre>";
     print_r($tournement);
@@ -75,12 +75,6 @@
             <td class="noborder">Handtekening<br>aanvoerders<br>voor akkoord</td>
             <td class="groot"></td>
         </tr>
-{{--        <tr>
-            <td colspan="3" class="noborder">Opmerkingen</td>
-        </tr>
-        <tr>
-            <td colspan="3" class="groot"></td>
-        </tr>--}}
         </table>
         </div>
         <?php
@@ -89,9 +83,4 @@
                     echo "</div>\n";
             ?>
     @endforeach
-
-
-
-
-    </div>
 @endsection

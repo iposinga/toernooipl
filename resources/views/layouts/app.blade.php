@@ -55,7 +55,7 @@
                                 </li>
                             @endif
                         @else
-                            <li class="nav-item"><a class="nav-link" href="{{ url('/home') }}">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url('/home') }}">Dashboard</a></li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     {{ Auth::user()->name }}
@@ -88,6 +88,7 @@
         </main>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/a293ef7e4c.js" crossorigin="anonymous"></script>
     <script src="{{ asset('js/bootstrap-datetimepicker.js') }}"></script>
     <script src="{{ asset('js/locales/bootstrap-datetimepicker.nl.js') }}"></script>
     <script>

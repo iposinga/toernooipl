@@ -22,6 +22,10 @@ class Round extends Model
     {
         return $this->hasMany(Game::class);
     }
+    public function finalgames(): HasMany
+    {
+        return $this->hasMany(Finalgame::class);
+    }
     public function tournement(): BelongsTo
     {
         return $this->belongsTo(Tournement::class);

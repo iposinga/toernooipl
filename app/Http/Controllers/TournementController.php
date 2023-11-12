@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\GamesExport;
 use App\Models\Finalgame;
 use App\Models\Game;
 use App\Models\Pitch;
@@ -16,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TournementController extends Controller
 {
@@ -81,7 +83,54 @@ class TournementController extends Controller
         return redirect()->back()
             ->withSuccess('De user is succesvol bij dit toernooi verwijderd.');
     }
-
+    public function programold(int $id): View
+    {
+        $tournement = Tournement::with('users')->find($id);
+        $pitches = Pitch::where('tournement_id', $id)->get();
+        $rounds = Round::find($id);
+        $poules = Poule::with('teams')->where('tournement_id', $id)->get();
+        $games = Game::with('round', 'pitch', 'hometeam', 'awayteam')
+            ->where('tournement_id', $id)
+            ->orderBy('round_id', 'asc')
+            ->orderBy('pitch_id', 'asc')
+            ->get();
+        $finalgames = Finalgame::with('round', 'pitch', 'homepoule', 'awaypoule', 'hometeam', 'awayteam')
+            ->where('tournement_id', $id)
+            ->orderBy('round_id', 'asc')
+            ->orderBy('pitch_id', 'asc')
+            ->get();
+        $dates = Tournement::getTournementDates($id);
+        return view('print.program', compact(['tournement', 'pitches', 'rounds', 'poules','games','finalgames','dates']));
+    }
+    public function program(int $id): View
+    {
+        $tournement = Tournement::find($id);
+        $poules = Poule::with('teams')
+        ->where('tournement_id', $id)
+        ->orderBy('poule_name')
+        ->get();
+        $pitches = Pitch::where('tournement_id', $id)
+            ->orderBy('pitch_nr', 'asc')
+            ->get();
+        $rounds = Round::with([
+            'games',
+            'games.pitch',
+            'games.hometeam',
+            'games.awayteam'
+        ])
+        ->where('tournement_id', $id)
+        ->where('finalround', '=', -1)
+        ->get();
+        $finalrounds = Round::with([
+            'finalgames',
+            'finalgames.pitch'
+        ])
+        ->where('tournement_id', $id)
+        ->where('finalround', '>', -1)
+        ->get();
+        $dates = Tournement::getTournementDates($id);
+        return view('print.program', compact(['tournement', 'poules', 'pitches', 'rounds', 'finalrounds', 'dates']));
+    }
     public function gamesheets(int $id): View
     {
         $tournement = Tournement::find($id);
@@ -97,5 +146,8 @@ class TournementController extends Controller
             ->get();
         return view('print.gamesheets', compact(['tournement', 'games','finalgames']));
     }
-
+    public function export(int $id)
+    {
+        return Excel::download(new GamesExport($id), 'programma.xlsx');
+    }
 }

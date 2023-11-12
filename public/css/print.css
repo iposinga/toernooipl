@@ -7,7 +7,7 @@
 }
 
 .middelgroot {
-    font-size: 30px;
+    font-size: 20px;
     border: 2px solid;
     text-align: center;
     width: 150px;
@@ -34,4 +34,36 @@
     float: right;
     margin-left: 20px;
     margin-right: 0;
+}
+/* voor het printen van het wedstrijdschema */
+.print {
+    font-size: 12px;
+    padding-bottom: 12px;
+}
+.tableprint {
+    border-spacing: 0;
+    border-left: 3px solid;
+    border-right: 3px solid;
+    border-top: 3px solid;
+    border-bottom: 3px solid;
+}
+td {
+    white-space:nowrap;
+    padding: 0;
+}
+.programma_cel {
+    padding: 1px 3px; /* de eerste is voor top en bottom, de tweede voor links en rechts */
+    text-align: center;
+}
+.lijnlinks {
+    border-left: 1px solid;
+}
+.lijnlinksvet {
+    border-left: 3px solid;
+}
+.lijnondervet {
+    border-bottom: 3px solid;
+}
+.lijnbovenvet {
+    border-top: 3px solid;
 }

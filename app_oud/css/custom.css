@@ -1,0 +1,134 @@
+.rondenrkop {
+	width: 45px;
+}
+
+.tijdenkop {
+	text-align: center;
+}
+
+.veldkop {
+	text-align: center;
+}
+
+.rondenr {
+	border: solid 1px;
+	text-align: right;
+	padding-right: 8px;
+	width: 20px;
+}
+
+.tijden {
+	border: solid 1px;
+	width: 120px;
+	text-align: center;
+}
+
+.wedstr {
+	border: solid 1px;
+	width: 80px;
+	text-align: center;
+}
+
+table {
+	/* zorgt voor de ruimte tussen de lijnen */
+	border-spacing: 2px;
+	border-collapse: separate;
+}
+
+.teamnr {
+	font-size: smaller;
+	text-align: right;
+	padding-right: 2px;
+	padding-left: 2px;
+	border: 0px;
+	color: #fff;
+}
+
+.teamnaam {
+	font-size: smaller;
+	border: solid 1px;
+}
+
+.teamnaam_leeg {
+	font-size: smaller;
+	border: 0px;
+}
+
+.poulekop {
+	font-size: smaller;
+	font-weight: bold;
+}
+
+.modal-body {
+    position: relative;
+    overflow-y: auto;
+    max-height: 400px;
+    padding: 15px;
+}
+.pouleschema {
+	font-size: smaller;
+	width: 100%;
+}
+
+.poulestand {
+	font-size: smaller;
+	width: 100%;
+}
+
+.teamnrstand {
+	border: solid 1px;
+	text-align: right;
+	padding-right: 4px;
+	padding-left: 2px;
+	width: 40px;
+}
+
+.teamnaamstand {
+	border: solid 1px;
+	padding-right: 2px;
+	padding-left: 4px;
+	width: 80px;
+}
+
+.punten {
+	border: solid 1px;
+	text-align: right;
+	padding-right: 4px;
+	padding-left: 2px;
+	font-weight: bold;
+}
+.gespeeld {
+	border: solid 1px;
+	text-align: center;
+	padding-right: 3px;
+	padding-left: 3px;
+	font-weight: bold;	
+}
+
+.aantal {
+	border: solid 1px;
+	text-align: center;
+	padding-right: 3px;
+	padding-left: 3px;
+}
+
+.positie {
+	border: solid 1px;
+	text-align: right;
+	padding-right: 8px;
+}
+
+.red {
+	color: red;
+}
+
+.rondenrkoppoule {
+	width: 20px;
+}
+
+.tijdenpoule {
+	border: solid 1px;
+	width: 80px;
+	text-align: center;
+}
+

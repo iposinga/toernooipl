@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () { return view('welcome'); });
 Route::get('/poules/{id}', [PouleController::class, 'show'])->name('poules.show');
 Route::get('/tournement_program/{id}', [TournementController::class, 'program'])->name('tournement.program');
+Route::get('/tournement_videowall/{id}', [TournementController::class, 'videowall'])->name('tournement.videowall');
 Route::get('/tournement_gamesheets/{id}', [TournementController::class, 'gamesheets'])->name('tournement.gamesheets');
 Route::get('/tournement_gamesexport/{id}', [TournementController::class, 'export'])->name('tournement.gamesexport');
 //helper class die alle routes genereert die nodig zijn voor authenticatie, inclusief logout

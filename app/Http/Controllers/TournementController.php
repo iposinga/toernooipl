@@ -83,25 +83,6 @@ class TournementController extends Controller
         return redirect()->back()
             ->withSuccess('De user is succesvol bij dit toernooi verwijderd.');
     }
-    public function programold(int $id): View
-    {
-        $tournement = Tournement::with('users')->find($id);
-        $pitches = Pitch::where('tournement_id', $id)->get();
-        $rounds = Round::find($id);
-        $poules = Poule::with('teams')->where('tournement_id', $id)->get();
-        $games = Game::with('round', 'pitch', 'hometeam', 'awayteam')
-            ->where('tournement_id', $id)
-            ->orderBy('round_id', 'asc')
-            ->orderBy('pitch_id', 'asc')
-            ->get();
-        $finalgames = Finalgame::with('round', 'pitch', 'homepoule', 'awaypoule', 'hometeam', 'awayteam')
-            ->where('tournement_id', $id)
-            ->orderBy('round_id', 'asc')
-            ->orderBy('pitch_id', 'asc')
-            ->get();
-        $dates = Tournement::getTournementDates($id);
-        return view('print.program', compact(['tournement', 'pitches', 'rounds', 'poules','games','finalgames','dates']));
-    }
     public function program(int $id): View
     {
         $tournement = Tournement::find($id);
@@ -149,5 +130,23 @@ class TournementController extends Controller
     public function export(int $id)
     {
         return Excel::download(new GamesExport($id), 'programma.xlsx');
+    }
+    public function videowall(int $id): View
+    {
+        $tournement = Tournement::find($id);
+        $poules = Poule::with('teams','games','games.round','games.pitch','games.hometeam','games.awayteam')
+            ->where('tournement_id', $id)
+            ->orderBy('poule_name')
+            ->get();
+        $rounds = Round::with([
+            'games',
+            'games.pitch',
+            'games.hometeam',
+            'games.awayteam'
+        ])
+            ->where('tournement_id', $id)
+            ->where('finalround', '=', -1)
+            ->get();
+        return view('videowall.index', compact(['tournement', 'poules', 'rounds']));
     }
 }

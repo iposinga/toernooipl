@@ -103,33 +103,33 @@
                             <div class="col-4">
                                 {{ $tournement->tournement_name }}
                             </div>
-{{--                            <div class="col-1">
-                                <i class="bi bi-fullscreen"></i>
-                            </div>--}}
                             <div class="col-1">
+                                <a type="button" href="{{ route('tournement.videowall', ['id' => $tournement->id]) }}" style="color: white" target="_blank">
+                                <i class="bi bi-fullscreen"></i>
+                                </a>
+                            </div>
+                            <div class="col-1 text-center">
                                 <a type="button" href="{{ route('tournement.program', ['id' => $tournement->id]) }}" style="color: white" target="_blank">
                                     <i class="bi bi-printer"></i>
                                 </a>
                             </div>
-                            <div class="col-1">
+                            <div class="col-1 text-center">
                                 <a type="button" href="{{ route('tournement.gamesheets', ['id' => $tournement->id]) }}" style="color: white" target="_blank">
                                     <i class="bi bi-files"></i>
                                 </a>
                             </div>
-                            <div class="col-1">
+                            <div class="col-1 text-end">
                                 <a type="button" href="{{ route('tournement.gamesexport', ['id' => $tournement->id]) }}" style="color: white">
                                     <i class="bi bi-filetype-xlsx"></i>
                                 </a>
                             </div>
-                            <div class="col-1">
-                                <a type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showDestroyAlert({{ $tournement->id }}); return false">
-                                    <i class="bi bi-trash3"></i>
-                                </a>
-                            </div>
                             <div class="col-4 text-end">
                                 @if(count($dates) == 1)
-                                {{ Carbon\Carbon::parse($tournement->tournement_date)->translatedFormat('l j F Y')  }}
+                                {{ Carbon\Carbon::parse($tournement->tournement_date)->translatedFormat('l j M \'y')  }}
                                 @endif
+                                    &nbsp;&nbsp;<a type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showDestroyAlert({{ $tournement->id }}); return false">
+                                        <i class="bi bi-trash3"></i>
+                                    </a>
                             </div>
                         </div>
                     </div>

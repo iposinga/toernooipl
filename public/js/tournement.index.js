@@ -20,7 +20,7 @@ function highLight(teamnr){
 function showAddTournementusers(tournement_id)
 {
     $.ajax({
-        url: '/public/aj/tournement_users/add',
+        url: '/aj/tournement_users/add',
         data: {
             tournement_id: tournement_id
         },
@@ -66,7 +66,7 @@ function deleteUitslag(id, poule_id, thuisteam, uitteam)
     confirm("Weet je het zeker?")
     {
         $.ajax({
-            url: '/public/aj/games/deletescore',
+            url: '/aj/games/deletescore',
             data: {
                 id: id,
                 poule_id: poule_id
@@ -133,7 +133,7 @@ function updateUitslag()
     let hometeam = $("#labelHomeScore").text();
     let awayteam = $("#labelAwayScore").text();
     $.ajax({
-        url: '/public/aj/games/update',
+        url: '/aj/games/update',
         data: {
             id: id,
             poule_id: poule_id,
@@ -169,7 +169,7 @@ function updateUitslag()
 function showEditPoule(id)
 {
     $.ajax({
-        url: '/public/aj/teams/edit',
+        url: '/aj/teams/edit',
         data: {
             id: id
         },
@@ -251,7 +251,7 @@ function updateRounds()
     if($('#inputFinalRoundType').length)
         round_type = $("#inputFinalRoundType").val()
     $.ajax({
-        url: '/public/aj/rounds/update',
+        url: '/aj/rounds/update',
         data: {
             id: roundid,
             inputTournementId: tournementid,
@@ -271,7 +271,7 @@ function updateRounds()
 
 function showAddFinalround(tournement_id, round_nr, start, duur)
 {
-    let form = `<form id="add_finalround_form" method="post" class="row g-3" action="/public/js/rounds/store">
+    let form = `<form id="add_finalround_form" method="post" class="row g-3" action="/js/rounds/store">
                     <input type="hidden" name="tournement_id" value='${ tournement_id }'>
                     <input type="hidden" name="round_nr" value='${ round_nr }'>
                     <input type="hidden" name="_token" value="${ csrftoken }">
@@ -317,7 +317,7 @@ function showAddFinalround(tournement_id, round_nr, start, duur)
 function showEditFinalGame(id)
 {
     $.ajax({
-        url: '/public/aj/finalgames/edit',
+        url: '/aj/finalgames/edit',
         data: {
             id: id
         },
@@ -339,7 +339,7 @@ function showEditFinalGame(id)
 function showStandPoule(id, poulenaam)
 {
     $.ajax({
-        url: '/public/aj/teams/show',
+        url: '/aj/teams/show',
         data: {
             poule_id: id
         },
@@ -358,7 +358,7 @@ function showStandPoule(id, poulenaam)
 }
 function showDestroyAlert(tournementid)
 {
-    let form = `<form id="delete_tournement_form" method="post" class="row g-3" action="/public/js/tournements/destroy">
+    let form = `<form id="delete_tournement_form" method="post" class="row g-3" action="/js/tournements/destroy">
                     <input type="hidden" name="_method" value="delete">
                     <input type="hidden" name="_token" value="${ csrftoken }">
                     <input type="hidden" name="tournement_id" value="${ tournementid }">
@@ -374,7 +374,7 @@ function showDestroyAlert(tournementid)
 }
 function showDestroyTournementUserAlert(tournementid, userid)
 {
-    let form = `<form id="delete_tournement_user_form" method="post" class="row g-3" action="/public/js/tournement_user/destroy">
+    let form = `<form id="delete_tournement_user_form" method="post" class="row g-3" action="/js/tournement_user/destroy">
                     <input type="hidden" name="_method" value="delete">
                     <input type="hidden" name="_token" value="${ csrftoken }">
                     <input type="hidden" name="tournement_id" value="${ tournementid }">
@@ -393,7 +393,7 @@ function showDestroyTournementUserAlert(tournementid, userid)
 function showEditVelden(id)
 {
     $.ajax({
-        url: '/public/aj/pitches/edit',
+        url: '/aj/pitches/edit',
         data: {
             id: id
         },

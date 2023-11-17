@@ -15,11 +15,10 @@ return new class extends Migration
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
-            //$table->integer('poule_id');
             $table->foreignID('poule_id')->constrained('poules')->onDelete('cascade');
+            $table->foreignID('club_id')->constrained('clubs')->nullable();
             $table->smallInteger('team_nr');
             $table->string('team_name')->nullable();
-            $table->string('team_class')->nullable();
             $table->smallInteger('played')->default(0);
             $table->smallInteger('points')->default(0);
             $table->smallInteger('win')->default(0);

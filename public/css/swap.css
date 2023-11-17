@@ -1,0 +1,26 @@
+:root {
+    --width: 70px;
+    --height: 35px;
+}
+
+.droppable {
+    width: var(--width);
+    height: var(--height);
+    background: white;
+    color: white;
+    line-height: var(--height);
+    vertical-align: middle;
+    text-align: center;
+    padding: 2px; /* om dezelfde afstand te krijgen tussen kolommen en rijen */
+}
+
+.draggable {
+    width: var(--width);
+    height: var(--height);
+    background: green;
+    cursor: grab;
+}
+
+.placeholder {
+    background: red;
+}

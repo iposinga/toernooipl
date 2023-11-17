@@ -1,6 +1,6 @@
 function showAddTournement()
 {
-    let form = `<form id="add_toernooi_form" class="row g-3" method="post" action="/public/js/tournements/store">
+    let form = `<form id="add_toernooi_form" class="row g-3" method="post" action="/js/tournements/store">
             <input type="hidden" name="_token" value="${ csrftoken }">
             <div class="col-md-6">
                 <label for="inputToernooinaam" class="form-label">Naam van het toernooi</label>

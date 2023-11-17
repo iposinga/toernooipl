@@ -2,7 +2,7 @@ teams = {};
 function getTeams(tournement_id)
 {
     $.ajax({
-        url: '/public/aj/teams/showinjs',
+        url: '/aj/teams/showinjs',
         data: {
             id: tournement_id
         },
@@ -61,7 +61,7 @@ function selectTeamByRanking(homeoraway)
         ranking = $("#inputAwayRanking").val()
     }
     $.ajax({
-        url: '/public/aj/teams/stand',
+        url: '/aj/teams/stand',
         data: {
             poule_id: pouleid
         },
@@ -130,7 +130,7 @@ function selectTeamByRanking(homeoraway)
 
 function showDestroyAlert(finalgameid)
 {
-    let form = `<form id="delete_finalgame_form" method="post" class="row g-3" action="/public/js/finalgames/destroy">
+    let form = `<form id="delete_finalgame_form" method="post" class="row g-3" action="/js/finalgames/destroy">
                     <input type="hidden" name="_method" value="delete">
                     <input type="hidden" name="_token" value="${ csrftoken }">
                     <input type="hidden" name="finalgame_id" value="${ finalgameid }">

@@ -27,6 +27,7 @@ Route::get('/poules/{id}', [PouleController::class, 'show'])->name('poules.show'
 Route::get('/tournement_program/{id}', [TournementController::class, 'program'])->name('tournement.program');
 Route::get('/tournement_videowall/{id}', [TournementController::class, 'videowall'])->name('tournement.videowall');
 Route::get('/tournement_gamesheets/{id}', [TournementController::class, 'gamesheets'])->name('tournement.gamesheets');
+Route::get('/tournement_swap/{id}', [TournementController::class, 'swap'])->name('tournement.swap');
 Route::get('/tournement_gamesexport/{id}', [TournementController::class, 'export'])->name('tournement.gamesexport');
 //helper class die alle routes genereert die nodig zijn voor authenticatie, inclusief logout
 Auth::routes();
@@ -60,6 +61,8 @@ Route::middleware('auth')->group(callback: function() {
     Route::post('/pitches/{tournement_id}/update', [PitchController::class, 'update'])->name('pitches.update');
     //om een user te koppelen aan een toernooi
     Route::post('/tournement_user/store/{id}', [TournementController::class, 'tournement_userstore'])->name('tournement_user.store');
+
+    Route::post('/aj/tournement/swap_update', [GameController::class, 'swap_update']);
 });
 
 

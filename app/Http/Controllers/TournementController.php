@@ -16,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -148,5 +149,17 @@ class TournementController extends Controller
             ->where('finalround', '=', -1)
             ->get();
         return view('videowall.index', compact(['tournement', 'poules', 'rounds']));
+    }
+    public function swap(int $id): View
+    {
+        $tournement = Tournement::with('users')->find($id);
+        $pitches = Pitch::where('tournement_id', $id)->get();
+        $games = Game::with('round', 'pitch', 'hometeam', 'awayteam')
+            ->where('tournement_id', $id)
+            ->orderBy('round_id', 'asc')
+            ->orderBy('pitch_id', 'asc')
+            ->get();
+        $dates = Tournement::getTournementDates($id);
+        return view('tournement.indexswap', compact(['tournement', 'pitches','games','dates']));
     }
 }

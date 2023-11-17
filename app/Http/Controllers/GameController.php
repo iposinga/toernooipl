@@ -18,6 +18,19 @@ class GameController extends Controller
         $team = new Team;
         $team->updatestand($request->input('poule_id'));
     }
+    public function swap_update(Request $request)
+    {
+        $game = Game::find($request->input('d_game_id'));
+        $game->round_id = $request->input('m_round_id');
+        $game->pitch_id = $request->input('m_pitch_id');
+        $game->save();
+
+        $game2 = Game::find($request->input('m_game_id'));
+        $game2->round_id = $request->input('d_round_id');
+        $game2->pitch_id = $request->input('d_pitch_id');
+        $game2->save();
+
+    }
     public function deletescore(Request $request)
     {
         Game::where('id', $request->input( 'id'))

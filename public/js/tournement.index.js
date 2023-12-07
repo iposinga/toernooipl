@@ -17,6 +17,20 @@ function highLight(teamnr){
         $(".team_" + teamnr).addClass("alert alert-warning");
     }
 }
+function highLightClub(clubid){
+    if($(".clubnaam_" + clubid).hasClass("alert alert-warning"))
+    {
+        $("tr").removeClass("alert alert-warning");
+        $("td").removeClass("bg-warning");
+    }
+    else
+    {
+        $("tr").removeClass("alert alert-warning");
+        $("td").removeClass("bg-warning");
+        $(".club_" + clubid).addClass("bg-warning");
+        $(".clubnaam_" + clubid).addClass("alert alert-warning");
+    }
+}
 function showAddTournementusers(tournement_id)
 {
     $.ajax({
@@ -87,8 +101,8 @@ function updateUitslag()
 {
     let id = $("#inputId").val()
     let poule_id = $("#inputPouleId").val()
-    let homescore = $("#inputHomeScore").val()
-    let awayscore = $("#inputAwayScore").val()
+    let homescore = parseInt($("#inputHomeScore").val());
+    let awayscore = parseInt($("#inputAwayScore").val());
     //de waarden bij een gelijkspel
     let homepoints = 1
     let awaypoints = 1
@@ -100,8 +114,8 @@ function updateUitslag()
     let awayloss = 0
     if(!homescore || !awayscore)
     {
-        homescore = ''
-        awayscore = ''
+        homescore = null
+        awayscore = null
         alert("Minimaal 1 van de 2 scores is leeg en dat mag niet")
         return
     }
@@ -152,7 +166,7 @@ function updateUitslag()
         success: function (){
             //alert("goed gegaan");
             $("#uitslag_" + id).empty()
-            if(homescore != '' && awayscore != '') {
+            if(homescore != null && awayscore != null) {
                 $("#uitslag_" + id).append("<span class='badge text-bg-success' style='background-color: #29286d; width: 100%'>" + homescore + " - " + awayscore)
                 $("#edit_game_btn_" + id).attr("onclick", "showEditUitslag(" + id + ", " + poule_id + ", '" + hometeam + "', '" + awayteam + "', " + homescore + ", " + awayscore + ")");
             }
@@ -166,12 +180,13 @@ function updateUitslag()
         }
     })
 }
-function showEditPoule(id)
+function showEditPoule(id, tournement_id)
 {
     $.ajax({
         url: '/aj/teams/edit',
         data: {
-            id: id
+            id: id,
+            tournement_id, tournement_id
         },
         dataType: 'json',
         type: 'get',
@@ -188,7 +203,7 @@ function showEditPoule(id)
     })
 }
 
-function showEditRound(id, tourn_id, round_nr, round_start, round_type)
+function showEditRound(id, tourn_id, round_nr, round_start, round_type, game_duration, change_duration)
 {
     const typeoptions1 = {18:'achtste finales', 14: 'kwartfinales', 12: 'halve finales', 11: 'finale', 10: 'anders'}
     const typeoptions0 = {8: 'achtste finales', 4: 'kwartfinales', 2: 'halve finales', 1: 'finale', 0: 'anders'}
@@ -197,24 +212,24 @@ function showEditRound(id, tourn_id, round_nr, round_start, round_type)
                     <input type="hidden" id="inputTournementId" value="${ tourn_id }">
                     <input type="hidden" id="inputRoundNr" value="${ round_nr }">`
         if(round_type > -1) {
-            form += `<div class="col-md-9 offset-md-1">
+            form += `<div class="col-md-11 offset-md-1">
                         <label for="inputFinalRoundType" class="form-label">Type finaleronde</label>
                         <select id="inputFinalRoundType" class="form-select">
                             <option value="">kies...</option>
-                            <optgroup label="teams kiezen op basis van ranking in poule">`
+                            <optgroup label="teams kiezen op basis van ranking in poules">`
             for (const key in typeoptions1) {
                 if(key == round_type)
-                    form += `<option value="${key}" selected>${typeoptions1[key]}</option>`
+                    form += `<option value="${key}" selected>${typeoptions1[key]} (o.b.v. ranking in poules)</option>`
                 else
-                    form += `<option value="${key}">${typeoptions1[key]}</option>`
+                    form += `<option value="${key}">${typeoptions1[key]} (o.b.v. ranking in poules)</option>`
             }
             form += `</optgroup>
                             <optgroup label="teams kiezen op basis van wedstrijduitslagen uit vorige ronde">`
             for (const key in typeoptions0) {
                 if(key == round_type)
-                form += `<option value="${key}" selected>${typeoptions0[key]}</option>`
-            else
-                form += `<option value="${key}">${typeoptions0[key]}</option>`
+                    form += `<option value="${key}" selected>${typeoptions0[key]} (o.b.v. uitslagen uit vorige ronde)</option>`
+                else
+                    form += `<option value="${key}">${typeoptions0[key]} (o.b.v. uitslagen uit vorige ronde)</option>`
             }
             form += `</optgroup>
                         </select>
@@ -227,6 +242,14 @@ function showEditRound(id, tourn_id, round_nr, round_start, round_type)
                         <span class="input-group-text" onclick="$('#inputDatum').datetimepicker('show');"><i class="bi bi-calendar3"></i></span>
                     </div>
                 </div>
+                <div class="col-md-3">
+                    <label for="inputDuur" class="form-label">Wedstrijdduur</label>
+                    <input type="number" class="form-control" id="inputDuur" name="inputDuur" value="${ game_duration }" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="inputWissel" class="form-label">Wisseltijd</label>
+                    <input type="number" class="form-control" id="inputWissel" name="inputWissel" value="${ change_duration }" required>
+                </div>
                 <div class="col-md-11 offset-md-1">
                     <div class="form-text">
                     de rondetijden <i>na</i> deze ronde worden automatisch ook aangepast;<br>
@@ -234,7 +257,11 @@ function showEditRound(id, tourn_id, round_nr, round_start, round_type)
                     </div>
                 </div>
                 </form>`;
-    let buttons = `<button id="secondaire-btn" type="reset" form="edit_round_form" class="btn btn-secondary">Reset</button>
+    let delbutton = "";
+    if(round_type > -1){
+        delbutton = `<button id="delete-btn" type="button" form="edit_round_form" class="btn btn-danger" onclick="deleteFinalRound(${ id }); return false;">Verwijder</button>`
+    }
+    let buttons = delbutton + `<button id="secondaire-btn" type="reset" form="edit_round_form" class="btn btn-secondary">Reset</button>
                     <button id="primaire-btn" type="submit" form="edit_round_form" class="btn btn-success">Bewaar</button>`;
     $(".modal-title").empty().append("Edit ronde-tijd");
     $(".modal-body").empty().append(form);
@@ -247,6 +274,8 @@ function updateRounds()
     let tournementid = $("#inputTournementId").val()
     let roundnr = $("#inputRoundNr").val()
     let start = $("#inputDatum").val()
+    let game_duration = $("#inputDuur").val()
+    let change_duration = $("#inputWissel").val()
     let round_type = -1
     if($('#inputFinalRoundType').length)
         round_type = $("#inputFinalRoundType").val()
@@ -257,6 +286,8 @@ function updateRounds()
             inputTournementId: tournementid,
             inputRoundNr: roundnr,
             start: start,
+            game_duration: game_duration,
+            change_duration: change_duration,
             finalround: round_type
         },
         type: 'put',
@@ -277,7 +308,7 @@ function showAddFinalround(tournement_id, round_nr, start, duur)
                     <input type="hidden" name="_token" value="${ csrftoken }">
                     <div class="col-md-9 offset-md-1">
                         <label for="inputFinalGameType" class="form-label">Type finaleronde</label>
-                        <select id="inputFinalGameType" name="finalround" class="form-select">
+                        <select id="inputFinalGameType" name="finalround" class="form-select" required>
                             <option value="">kies...</option>
                             <optgroup label="teams kiezen op basis van ranking in poule">
                                 <option value="18">achtste finales</option>
@@ -410,4 +441,86 @@ function showEditVelden(id)
             alert("Het is niet goed gegaan met het tonen van de velden van dit toernooi; tournement_id = " + id);
         }
     })
+}
+function showEditClubs(id)
+{
+    $.ajax({
+        url: '/aj/clubs/edit',
+        data: {
+            id: id
+        },
+        dataType: 'json',
+        type: 'get',
+        success: function (data){
+            let buttons = `<button type="reset" form="edit_clubs_form" class="btn btn-secondary">Reset</button>
+                                <button type="submit" form="edit_clubs_form" class="btn btn-success">Bewaar</button>`;
+            $(".modal-title").empty().append("Edit clubs");
+            $(".modal-body").empty().append(data.html);
+            $(".modal-footer").empty().append(buttons);
+        },
+        error: function (){
+            alert("Het is niet goed gegaan met het tonen van de clubs bij dit toernooi; tournement_id = " + id);
+        }
+    })
+}
+
+function showStandClubs(id)
+{
+    $.ajax({
+        url: '/aj/clubs/show',
+        data: {
+            tournement_id: id
+        },
+        dataType: 'json',
+        type: 'get',
+        success: function (data){
+            let buttons = `<button type="button" data-bs-dismiss="modal" class="btn btn-success">Sluit dit venster</button>`;
+            $(".modal-title").empty().append("Stand clubs");
+            $(".modal-body").empty().append(data.html);
+            $(".modal-footer").empty().append(buttons);
+        },
+        error: function (){
+            alert("niet goed gegaan");
+        }
+    })
+}
+function showEditClubcomp(id)
+{
+    $.ajax({
+        url: '/aj/clubcomp/edit',
+        data: {
+            id: id
+        },
+        dataType: 'json',
+        type: 'get',
+        success: function (data){
+            let buttons = `<button type="reset" form="edit_clubcomp_form" class="btn btn-secondary">Reset</button>
+                                <button type="submit" form="edit_clubcomp_form" class="btn btn-success">Bewaar</button>`;
+            $(".modal-title").empty().append("Edit naam en clubcompetitie");
+            $(".modal-body").empty().append(data.html);
+            $(".modal-footer").empty().append(buttons);
+        },
+        error: function (){
+            alert("Het is niet goed gegaan met het tonen van de clubcompetitie-gegevens; tournement_id = " + id);
+        }
+    })
+}
+function deleteFinalRound(id)
+{
+    confirm("Weet je het zeker?")
+    {
+        $.ajax({
+            url: '/aj/rounds/delete',
+            data: {
+                id: id
+            },
+            type: 'post',
+            success: function () {
+                location.reload();
+            },
+            error: function () {
+                alert("Het is niet goed gegaan met het verwijderen van de finaleronde; finalround_id = " + id);
+            }
+        })
+    }
 }

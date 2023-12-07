@@ -63,9 +63,11 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-sm-end" aria-labelledby="navbarDropdown">
+                                    @if(Auth::user()->name == "Ids Osinga")
                                     <a class="dropdown-item" href="/adminer.php?username=adminer&db=detoernooiplanner" target="_blank">
                                         Adminer
                                     </a>
+                                    @endif
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -92,9 +94,6 @@
     <script src="https://kit.fontawesome.com/a293ef7e4c.js" crossorigin="anonymous"></script>
     <script src="{{ asset('js/bootstrap-datetimepicker.js') }}"></script>
     <script src="{{ asset('js/locales/bootstrap-datetimepicker.nl.js') }}"></script>
-    <script>
-        let csrftoken = '{{ csrf_token() }}';
-    </script>
     @yield('scripts')
 </body>
 </html>

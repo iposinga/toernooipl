@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\Team;
+use App\Models\Club;
+use App\Models\Tournement;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
@@ -17,6 +19,13 @@ class GameController extends Controller
         //nu de stand-velden in de teams-tabel nog bijwerken
         $team = new Team;
         $team->updatestand($request->input('poule_id'));
+        //als het een clubcompetitie is, de stand in de clubs-tabel nog bijwerken
+        $game = Game::find($request->input('id'));
+        $tournement = Tournement::find($game->tournement_id);
+        if($tournement->is_clubcompetition > 0) {
+            $club = new Club;
+            $club->updatestand($tournement->id);
+        };
     }
     public function swap_update(Request $request)
     {

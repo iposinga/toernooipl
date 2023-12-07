@@ -24,6 +24,7 @@ return new class extends Migration
             $table->smallInteger('change_duration')->default(0);
             $table->boolean('is_entire_comp')->default(0);
             $table->boolean('is_public')->default(0);
+            $table->smallInteger('is_clubcompetition')->default(0);
             $table->timestamps();
         });
     }

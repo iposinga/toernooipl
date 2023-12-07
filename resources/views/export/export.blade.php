@@ -28,7 +28,7 @@
 <table>
     <tr>
         <th style="text-align: right"><b>NR</b></th>
-        <th style="text-align: center"><b>TIJD</b></th>
+        <th colspan="2" style="text-align: center"><b>TIJD</b></th>
     @foreach($pitches as $pitch)
             <th style="text-align: center"><b>VELD {{ $pitch->pitch_nr }}</b></th>
     @endforeach
@@ -52,10 +52,8 @@
             @php($vorigeronde = $wedstrijd->round->round_nr)
             <tr>
                 <td><b>{{ $wedstrijd->round->round_nr }}</b></td>
-                <td>
-                    {{ Carbon\Carbon::parse($wedstrijd->round->start)->translatedFormat('H:i') }}
-                    - {{ Carbon\Carbon::parse($wedstrijd->round->end)->translatedFormat('H:i') }}
-                </td>
+                <td>{{ Carbon\Carbon::parse($wedstrijd->round->start)->translatedFormat('H:i') }}</td>
+                <td>{{ Carbon\Carbon::parse($wedstrijd->round->end)->translatedFormat('H:i') }}</td>
         @endif
                 <td style="text-align: center">{{ $wedstrijd->hometeam->team_nr }} - {{ $wedstrijd->awayteam->team_nr }}</td>
         @if($wedstrijd->round->round_nr <> $vorigeronde && $wedstrijd->round->round_nr <> count($rounds))

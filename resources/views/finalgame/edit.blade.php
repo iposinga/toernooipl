@@ -35,7 +35,7 @@ switch ($finalgame->round->finalround) {
         $titel = "Anders";
 }
 ?>
-<form id="edit_finalewedstr_form" method="post" action="/public/js/finalgames/update">
+<form id="edit_finalewedstr_form" method="post" action="/js/finalgames/update">
     {{ csrf_field() }}
     <input type="hidden" id="inputFinalgameId" name="id" value="{{ $finalgame->id }}">
     <input type="hidden" id="inputHomepoule_Teamsnmbr" name="homepoule_teamsnmbr" value="{{ $finalgame->homepoule_teamsnmbr }}">

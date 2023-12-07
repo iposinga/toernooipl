@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ClubController;
 use App\Http\Controllers\FinalgameController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\HomeController;
@@ -36,8 +37,12 @@ Route::middleware('auth')->group(callback: function() {
     Route::match(['put', 'get', 'post'], '/js/tournements/store', [TournementController::class, 'store']);
     Route::get('/aj/tournement_users/add', [TournementController::class, 'addusers']);
     Route::get( '/aj/games/deletescore', [GameController::class, 'deletescore']);
+    Route::post( '/aj/rounds/delete', [RoundController::class, 'delete']);
     Route::match(['put', 'get'], '/aj/games/update', [GameController::class, 'update']);
     Route::get('/aj/teams/edit', [TeamController::class, 'edit']);
+    Route::get('/aj/clubs/edit', [ClubController::class, 'edit']);
+    Route::get('/aj/clubcomp/edit', [TournementController::class, 'editclubcomp']);
+
     Route::get('/aj/pitches/edit', [PitchController::class, 'edit']);
     //Route::post('/aj/rounds/update', [RoundController::class, 'update']);
     Route::match(['put', 'get'], '/aj/rounds/update', [RoundController::class, 'update']);
@@ -47,6 +52,8 @@ Route::middleware('auth')->group(callback: function() {
     Route::get('/aj/teams/stand', [TeamController::class, 'stand']);
     //voor de stand van de teams in een poule
     Route::get('/aj/teams/show', [TeamController::class, 'show']);
+    //voor de stand van de clubs in een tournooi
+    Route::get('/aj/clubs/show', [ClubController::class, 'show']);
     //voor de teams in finalgame.edit.js
     Route::get('/aj/teams/showinjs', [TeamController::class, 'showinjs']);
     Route::post('/js/finalgames/update', [FinalgameController::class, 'update']);
@@ -58,6 +65,8 @@ Route::middleware('auth')->group(callback: function() {
     Route::get('/tournement/{id}/{poule_id}', [TournementController::class, 'show'])->name('tournement.show');
     //om de teamnamen in een poule aan te passen
     Route::post('/teams/{poule_id}/update', [TeamController::class, 'update'])->name('teams.update');
+    Route::post('/clubs/{tournement_id}/update', [ClubController::class, 'update'])->name('clubs.update');
+    Route::post('/tournement/{tournement_id}/updateclubcomp', [TournementController::class, 'updateclubcomp'])->name('tournement.updateclubcomp');
     Route::post('/pitches/{tournement_id}/update', [PitchController::class, 'update'])->name('pitches.update');
     //om een user te koppelen aan een toernooi
     Route::post('/tournement_user/store/{id}', [TournementController::class, 'tournement_userstore'])->name('tournement_user.store');

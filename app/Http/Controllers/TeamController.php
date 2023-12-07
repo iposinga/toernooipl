@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Club;
 use App\Models\Team;
 use App\Models\Poule;
+use App\Models\Tournement;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
@@ -11,21 +13,35 @@ class TeamController extends Controller
     //
     public function edit(Request $request)
     {
+        $tournement = Tournement::find($request->input('tournement_id'));
         $poule_id = $request->input('id');
-        $teams = Team::where('poule_id', $poule_id)->get();
-        $html = view('poule.edit')->with(compact(['teams', 'poule_id']))->render();
+        $teams = Team::where('poule_id', $poule_id)->with('club')->get();
+        $clubs = Club::where('tournement_id', $request->input('tournement_id'))
+            ->orderBy('club_nr')
+            ->get();
+        $html = view('poule.edit')->with(compact(['teams', 'poule_id', 'clubs','tournement']))->render();
         return response()->json(['success' => true, 'html' => $html]);
     }
 
     public function update(Request $request, $id)
     {
-        $teams = Team::where('poule_id', $id)->get();
-        foreach ($teams as $team) {
-            $team->update([
-                'team_name'=>$request->input('inputTeamname_'.$team->id)
-            ]);
-        }
         $poule = Poule::find($id);
+        $tournement = Tournement::find($poule->tournement_id);
+        $teams = Team::where('poule_id', $id)->get();
+        if($tournement->is_clubcompetition) {
+            foreach ($teams as $team) {
+                $team->update([
+                    'team_name' => $request->input('inputTeamname_' . $team->id),
+                    'club_id' => $request->input('inputClubid_' . $team->id)
+                ]);
+            }
+        } else {
+            foreach ($teams as $team) {
+                $team->update([
+                    'team_name' => $request->input('inputTeamname_' . $team->id)
+                ]);
+            }
+        };
         //return redirect()->back();
         return redirect()->route('tournement.show', ['id' => $poule->tournement_id, 'poule_id' => $id]);
     }

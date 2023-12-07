@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call([
             TournementSeeder::class,
+            ClubSeeder::class,
             RoundSeeder::class,
             GameSeeder::class,
             PouleSeeder::class,

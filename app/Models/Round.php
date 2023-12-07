@@ -56,23 +56,27 @@ class Round extends Model
         }
     }
 
-    public static function updateRounds($tournementid, $roundnr, $roundstart)
+    public static function updateRounds($tournementid, $roundnr, $roundstart, $gameduration, $changeduration)
     {
         $tournement = Tournement::find($tournementid);
+        $tournement->update([
+            'game_duration' => $gameduration,
+            'change_duration' => $changeduration
+        ]);
         $rounds = Round::where('tournement_id', $tournementid)
             ->where('round_nr', '>=', $roundnr)
             ->orderBy('round_nr', 'asc')
             ->get();
         $start = date('Y-m-d H:i:s', strtotime($roundstart));
-        $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $tournement->game_duration . ' minutes'));
+        $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $gameduration . ' minutes'));
         foreach ($rounds as $round)
         {
             $round->update([
                 'start' => $start,
                 'end' => $end
             ]);
-            $start = date('Y-m-d H:i:s', strtotime($end . ' +' . $tournement->change_duration . ' minutes'));
-            $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $tournement->game_duration . ' minutes'));
+            $start = date('Y-m-d H:i:s', strtotime($end . ' +' . $changeduration . ' minutes'));
+            $end = date('Y-m-d H:i:s', strtotime($start . ' +' . $gameduration . ' minutes'));
         }
     }
 }

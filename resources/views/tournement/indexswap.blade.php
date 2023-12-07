@@ -1,6 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
+    <nav class="floating-menu">
+        <a type="button" href="{{ route('tournement.videowall', ['id' => $tournement->id]) }}" target="_blank">
+            <i class="bi bi-cast"></i>
+        </a>
+        <a type="button" href="{{ route('tournement.program', ['id' => $tournement->id]) }}" target="_blank">
+            <i class="bi bi-printer"></i>
+        </a>
+        <a type="button" href="{{ route('tournement.gamesheets', ['id' => $tournement->id]) }}" target="_blank">
+            <i class="bi bi-files"></i>
+        </a>
+        <a type="button" href="{{ route('tournement.show', ['id' => $tournement->id, 'poule_id' => 0]) }}">
+            <i class="bi bi-arrow-left-right"></i>
+        </a>
+        <a type="button" href="{{ route('tournement.gamesexport', ['id' => $tournement->id]) }}">
+            <i class="bi bi-filetype-xlsx"></i>
+        </a>
+        <a type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" onclick="showDestroyAlert({{ $tournement->id }}); return false">
+            <i class="bi bi-trash3"></i>
+        </a>
+    </nav>
     <div class="container">
         <?php
         //echo "<pre>";
@@ -23,16 +43,17 @@
                             <div class="col-4">
                                 {{ $tournement->tournement_name }}
                             </div>
-                            <div class="col-4">Wissel wedstrijden om</div>
-                            <div class="col-1">
+{{--                            <div class="col-1">
                                 <a type="button" href="{{ route('tournement.show', ['id' => $tournement->id, 'poule_id' => 0]) }}" style="color: white">
                                     <i class="bi bi-chevron-double-left"></i>
                                 </a>
-                            </div>
+                            </div>--}}
+                            <div class="col-5">Wissel wedstrijden om door drag & drop</div>
+
 
                             <div class="col-3 text-end">
                                 @if(count($dates) == 1)
-                                {{ Carbon\Carbon::parse($tournement->tournement_date)->translatedFormat('l j M \'y')  }}
+                                {{ Carbon\Carbon::parse($tournement->tournement_date)->translatedFormat('D j M \'y')  }}
                                 @endif
                             </div>
                         </div>
@@ -83,20 +104,8 @@
                                     </td>
 
                                 @endif
-                                    <?php
-                                        if(count($pitches) > 4 || is_null($wedstrijd->hometeam->team_name))
-                                        {
-                                            $hometeamname = $wedstrijd->hometeam->team_nr;
-                                            $awayteamname = $wedstrijd->awayteam->team_nr;
-                                        }
-                                        else
-                                        {
-                                            $hometeamname = $wedstrijd->hometeam->team_name;
-                                            $awayteamname = $wedstrijd->awayteam->team_name;
-                                        }
-                                    ?>
                                     <td class="droppable">
-                                        <div id="grp_{{ $wedstrijd->id }}_{{ $wedstrijd->round_id }}_{{ $wedstrijd->pitch_id }}_silvia" class="draggable">{{ $hometeamname }} - {{ $awayteamname }}</div>
+                                        <div id="grp_{{ $wedstrijd->id }}_{{ $wedstrijd->round_id }}_{{ $wedstrijd->pitch_id }}_silvia" class="draggable">{{ $wedstrijd->hometeam->team_nr }} - {{ $wedstrijd->awayteam->team_nr }}</div>
                                     </td>
                                 @if($wedstrijd->round->round_nr <> $vorigeronde)
                                     </tr>

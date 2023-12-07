@@ -25,11 +25,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        //$toernooien = Tournement::all();
-        $toernooien = Tournement::whereHas('users', function($q) {
-            $q->where('tournement_user.user_id', Auth::user()->id);
-        })->get();
-        //$toernooien = Tournement::with('users')->get();
+        if(Auth::user()->name == "Ids Osinga") {
+            $toernooien = Tournement::all();
+        }
+        else
+        {
+            $toernooien = Tournement::whereHas('users', function($q) {
+                $q->where('tournement_user.user_id', Auth::user()->id);
+            })->get();
+        }
         return view('home', compact('toernooien'));
     }
 }

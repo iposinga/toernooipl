@@ -42,6 +42,18 @@ function showAddTournement()
                 </div>
             </div>
             <div class="col-md-12">
+                <div class="form-check form-switch form-check-lg">
+                    <input class="form-check-input" type="checkbox" role="switch" id="inputClubCompetitie" value="1" onchange="showInputClubs(); return false;">
+                    <label class="form-check-label" for="inputClubCompetitie">De teams spelen voor een club (i.p.v. elk voor zich)</label>
+                </div>
+            </div>
+            <div id="clubcompetitie" class="row col-md-11 offset-md-1 d-none">
+                <label class="col-md-3 col-form-label" for="inputClubs"># Clubs</label>
+                <div class="col-md-2">
+                    <input type="text" class="form-control" id="inputClubs" name="is_clubcompetition" value="0">
+                </div>
+            </div>
+            <div class="col-md-12">
             <span class="help-block text-muted"><sup>* </sup>een toernooi kan over meerdere dagen worden vesrpreid door de datum en tijd van speelrondes aan te passen na het aanmaken van het toernooi<br>
             <sup>** </sup>de duur van de pauzes tussen de speelrondes</span>
             </div>
@@ -51,4 +63,15 @@ function showAddTournement()
     $(".modal-title").empty().append("Voeg toernooi toe")
     $(".modal-body").empty().append(form)
     $(".modal-footer").empty().append(buttons)
+}
+
+function showInputClubs()
+{
+    if($("#clubcompetitie").hasClass("d-none")) {
+        $("#clubcompetitie").removeClass("d-none");
+    }
+    else {
+        $("#clubcompetitie").addClass("d-none");
+        $("#inputClubs").val(0);
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Http\Request;
 
 class Finalgame extends Model
 {
@@ -68,7 +69,7 @@ class Finalgame extends Model
         return $this->belongsTo(static::class, 'away_winnergame_id');
     }
 
-    public static function makeFinalgame($tournement_id, $round_id)
+    public static function makeFinalgame($tournement_id, $round_id, $type_id)
     {
         $pitches = Pitch::where('tournement_id', $tournement_id)->get();
         foreach($pitches as $pitch)
@@ -76,7 +77,8 @@ class Finalgame extends Model
             Finalgame::create([
                 'tournement_id' => $tournement_id,
                 'round_id' => $round_id,
-                'pitch_id' => $pitch->id
+                'pitch_id' => $pitch->id,
+                'type_id' => $type_id
             ]);
         }
     }

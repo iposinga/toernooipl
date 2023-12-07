@@ -10,6 +10,7 @@ class Team extends Model
     use HasFactory;
     protected $fillable = [
         'poule_id',
+        'club_id',
         'team_nr',
         'team_name',
         'team_class',

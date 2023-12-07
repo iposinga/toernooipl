@@ -60,6 +60,6 @@
 @endsection
 
 @section('scripts')
-    <script>let csrftoken = {{ csrf_token() }}</script>
+    <script>let csrftoken = "{{ csrf_token() }}"</script>
     <script src="{{ asset('js/home.js') }}"></script>
 @endsection

@@ -6,7 +6,6 @@ use App\Models\Finalgame;
 use App\Models\Poule;
 use App\Models\Round;
 use App\Models\Team;
-use App\Models\Tournement;
 use Illuminate\Http\Request;
 
 class FinalgameController extends Controller

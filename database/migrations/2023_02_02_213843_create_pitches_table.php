@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('pitches', function (Blueprint $table) {
             $table->id();
             $table->foreignID('tournement_id')->constrained('tournements')->onDelete('cascade');
+            $table->foreignID('stadium_id')->constrained('stadiums');
             $table->tinyInteger('pitch_nr');
             $table->string('pitch_name');
-            $table->string('pitch_spot')->nullable();
             $table->timestamps();
         });
     }

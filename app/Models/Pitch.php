@@ -14,21 +14,23 @@ class Pitch extends Model
 
     protected $fillable = [
         'tournement_id',
+        'stadium_id',
         'pitch_nr',
         'pitch_name',
         'pitch_spot'
     ];
-
     public function matches(): HasMany
     {
         return $this->hasMany(Game::class);
     }
-
     public function tournement(): BelongsTo
     {
         return $this->belongsTo(Tournement::class);
     }
-
+    public function stadium(): BelongsTo
+    {
+        return $this->belongsTo(Stadium::class);
+    }
     public static function makePitches(int $tournement_id, int $pitches_nmbr )
     {
         $counter = 1;
@@ -46,7 +48,8 @@ class Pitch extends Model
     {
         $result = DB::select("SELECT pitch_spot FROM pitches WHERE tournement_id=? AND pitch_nr=?", [$toernooiid, $veldnr]);
         $returnstmt = $result[0]->pitch_spot;
-        //dd($result);
+        if($returnstmt == null)
+            $returnstmt = "";
         return $returnstmt;
     }
     public function telVeldenPlekVeld(int $toernooiid, int $veldnr)

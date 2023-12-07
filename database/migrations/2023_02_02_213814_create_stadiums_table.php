@@ -13,13 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('rounds', function (Blueprint $table) {
+        Schema::create('stadiums', function (Blueprint $table) {
             $table->id();
-            $table->foreignID('tournement_id')->constrained('tournements')->onDelete('cascade');
-            $table->mediumInteger('round_nr');
-            $table->mediumInteger('finalround')->default(-1);
-            $table->timestamp('start');
-            $table->timestamp('end');
             $table->timestamps();
         });
     }
@@ -31,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rounds');
+        Schema::dropIfExists('stadiums');
     }
 };

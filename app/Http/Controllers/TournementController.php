@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\GamesExport;
+use App\Models\Club;
 use App\Models\Finalgame;
 use App\Models\Game;
 use App\Models\Pitch;
@@ -26,7 +27,7 @@ class TournementController extends Controller
     {
         $tournement = Tournement::with('users')->find($id);
         $pitches = Pitch::where('tournement_id', $id)->get();
-        $poules = Poule::with('teams')->where('tournement_id', $id)->get();
+        $poules = Poule::with('teams', 'teams.club')->where('tournement_id', $id)->get();
         $games = Game::with('round', 'pitch', 'hometeam', 'awayteam')
             ->where('tournement_id', $id)
             ->orderBy('round_id', 'asc')
@@ -38,7 +39,9 @@ class TournementController extends Controller
             ->orderBy('pitch_id', 'asc')
             ->get();
         $dates = Tournement::getTournementDates($id);
-        return view('tournement.index', compact(['tournement', 'pitches', 'poules','games','finalgames','dates','focuspoule']));
+        $clubs = Club::where('tournement_id', $id)
+            ->get();
+        return view('tournement.index', compact(['tournement', 'pitches', 'poules','games','finalgames','dates','clubs','focuspoule']));
     }
 
     public function store(Request $request): RedirectResponse
@@ -161,5 +164,61 @@ class TournementController extends Controller
             ->get();
         $dates = Tournement::getTournementDates($id);
         return view('tournement.indexswap', compact(['tournement', 'pitches','games','dates']));
+    }
+    public function editclubcomp(Request $request)
+    {
+        $tournement = Tournement::find($request->input('id'));
+        $html = view('tournement.editclubcomp')->with(compact(['tournement']))->render();
+        return response()->json(['success' => true, 'html' => $html]);
+    }
+    public function updateclubcomp(Request $request, $id): RedirectResponse
+    {
+        $tournement = Tournement::find($id);
+        $tournement->update(['tournement_name' => $request->input('inputToernNaam')]);
+        $clubcomp_oud = $tournement->is_clubcompetition;
+        $clubcomp = $request->input('inputClubcomp');
+        if($clubcomp_oud <> $clubcomp) {
+            $tournement->update(['is_clubcompetition' => $clubcomp]);
+            if ($clubcomp == 0) {
+                //dan moeten de teams die aan de clubs gekoppeld zijn eerst 'los' gemaakt worden
+                $teams = Team::with('poule')
+                    ->whereHas('poule', function($q) use ($id){$q->where('poules.tournement_id', $id);})
+                    ->get();
+                foreach ($teams as $team){
+                    $team->update(['club_id' => null]);
+                }
+                Club::where('tournement_id', $id)->delete();
+            } else {
+                $verschil = $clubcomp - $clubcomp_oud;
+                if($verschil > 0){
+                    //het verschil moet er bij
+                    for($i = 0; $i < $verschil; $i++){
+                        $clubnr = $clubcomp_oud + $i + 1;
+                        Club::create([
+                            'tournement_id' => $id,
+                            'club_nr' => $clubnr,
+                            'club_name' => "Club ".$clubnr
+                        ]);
+                    }
+                } else {
+                    //het abs(verschil) moet er af
+                    for($i = $clubcomp_oud; $i > $clubcomp; $i--){
+                        //dan moeten de teams die aan de clubs gekoppeld zijn eerst 'los' gemaakt worden
+                        $club = Club::where([['tournement_id', $id], ['club_nr', $i]])
+                            ->get();
+                        $teams = Team::with('poule')
+                            ->whereHas('poule', function($q) use ($id){$q->where('poules.tournement_id', $id);})
+                            ->where('club_id', $club[0]->id)
+                            ->get();
+                        foreach ($teams as $team){
+                            $team->update(['club_id' => null]);
+                        }
+                        $club[0]->delete();
+                        //Club::where([['tournement_id', $id], ['club_nr', $i]])->delete();
+                    }
+                }
+            }
+        }
+        return redirect()->route('tournement.show', ['id' => $id, 'poule_id' => 0]);
     }
 }

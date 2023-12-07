@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('clubs', function (Blueprint $table) {
             $table->id();
-            $table->foreignID('tournement_id')->constrained('tournement')->onDelete('cascade');
-            $table->string('club_name')->nullable();
+            $table->foreignID('tournement_id')->constrained('tournements')->onDelete('cascade');
+            $table->smallInteger('club_nr');
+            $table->string('club_name');
             $table->smallInteger('club_played')->default(0);
             $table->smallInteger('club_points')->default(0);
             $table->smallInteger('club_win')->default(0);
@@ -26,7 +27,7 @@ return new class extends Migration
             $table->smallInteger('club_goal')->default(0);
             $table->smallInteger('club_goaldifference')->default(0);
             $table->smallInteger('club_ranking')->nullable();
-            $table->float('club_ranking')->nullable();
+            $table->float('club_average')->nullable();
             $table->timestamps();
         });
     }

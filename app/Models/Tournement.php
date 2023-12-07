@@ -34,6 +34,7 @@ class Tournement extends Model
         'change_duration',
         'is_entire_comp',
         'is_public',
+        'is_clubcompetition'
     ];
 
     public function users(): BelongsToMany
@@ -82,6 +83,9 @@ class Tournement extends Model
         Game::makeGames($tournement->id, $tournement->is_entire_comp);
         //attach the rounds and pitches to the games
         Game::attachRoundsAndPitchesToGames($tournement->id);
+        if($tournement->is_clubcompetition > 0) {
+            Club::makeClubs($tournement->id, $tournement->is_clubcompetition);
+        }
     }
     public static function getTournementDates(int $tournement_id): array
     {

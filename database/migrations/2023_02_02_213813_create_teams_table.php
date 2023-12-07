@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
             $table->foreignID('poule_id')->constrained('poules')->onDelete('cascade');
-            $table->foreignID('club_id')->constrained('clubs')->nullable();
+            $table->foreignID('club_id')->nullable()->default(null)->constrained('clubs');
             $table->smallInteger('team_nr');
             $table->string('team_name')->nullable();
             $table->smallInteger('played')->default(0);
